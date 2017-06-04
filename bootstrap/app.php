@@ -78,7 +78,7 @@ $app->register(Awok\Core\Authorization\AuthorizationServiceProvider::class);
 $app->register(Awok\Modules\User\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Store\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Product\Providers\ModuleServiceProvider::class);
-$app->register(Awok\Modules\location\Providers\ModuleServiceProvider::class);
+$app->register(Awok\Modules\Location\Providers\ModuleServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
