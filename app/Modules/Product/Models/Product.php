@@ -10,6 +10,8 @@ class Product extends Model
 
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class, 'products_attributes_values', 'product_id', 'attribute_id')->groupBy('id');
+        return $this->belongsToMany(Attribute::class, 'products_attributes_values', 'product_id', 'attribute_id')
+            ->groupBy('products_attributes.id')
+            ->withTimestamps();
     }
 }

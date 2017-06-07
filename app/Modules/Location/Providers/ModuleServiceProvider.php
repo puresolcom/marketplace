@@ -17,7 +17,7 @@ class ModuleServiceProvider extends \Awok\Providers\ModuleServiceProvider
     public function register()
     {
         parent::register();
-        $this->app->singleton('product', function () {
+        $this->app->singleton('Location', function () {
             return $this->app->make(LocationService::class);
         });
     }

@@ -10,7 +10,7 @@ class AttributeOption extends Model
 
     protected $guarded = [];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['attribute_id', 'created_at', 'updated_at'];
 
     public function translations()
     {

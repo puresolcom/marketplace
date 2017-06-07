@@ -68,7 +68,6 @@ $app->routeMiddleware([
 |
 */
 
-$app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Prettus\Repository\Providers\LumenRepositoryServiceProvider::class);
@@ -79,6 +78,7 @@ $app->register(Awok\Modules\User\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Store\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Product\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Location\Providers\ModuleServiceProvider::class);
+$app->register(\Awok\Providers\CatchAllOptionsRequestsProvider::class);
 
 /*
 |--------------------------------------------------------------------------

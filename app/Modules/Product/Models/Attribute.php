@@ -21,4 +21,14 @@ class Attribute extends Model
     {
         return $this->hasMany(AttributeOption::class, 'attribute_id', 'id');
     }
+
+    public function translations()
+    {
+        return $this->hasMany(AttributeTranslation::class, 'translatable_id', 'id');
+    }
+
+    public static function findBySlug($slug)
+    {
+        return self::where('slug', '=', $slug)->first();
+    }
 }

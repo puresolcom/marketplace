@@ -10,5 +10,12 @@ class AttributeValue extends Model
 
     protected $guarded = [];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['product_id', 'attribute_id', 'created_at', 'updated_at'];
+
+    public $timestamps = true;
+
+    public function translations()
+    {
+        return $this->hasMany(AttributeValueTranslation::class, 'translatable_id');
+    }
 }

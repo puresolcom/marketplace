@@ -33,7 +33,11 @@ trait RestfulResponseTrait
         $content,
         $status = 200,
         $contentType = 'application/json',
-        $headers = []
+        $headers = [
+            'Access-Control-Allow-Methods' => 'GET, POST, DELETE, PUT, OPTIONS',
+            'Access-Control-Allow-Headers' => 'Authorization, Content-type, Access-Control-Allow-Origin',
+            'Access-Control-Allow-Origin'  => '*',
+        ]
     ) {
         $headers = array_merge(['Content-Type' => $contentType], $headers);
 

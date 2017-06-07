@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Concerns\QueriesRelationships;
 
 class Model extends \Illuminate\Database\Eloquent\Model
 {
-    public $incrementing = false;
-
     /**
      * Maps API symbols to SQL-like symbols
      *
@@ -38,6 +36,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      * @param null   $relations
      * @param int    $limit
      * @param string $dataKey
+     * @param bool   $pagination
      *
      * @return mixed
      */
@@ -47,7 +46,8 @@ class Model extends \Illuminate\Database\Eloquent\Model
         $sort = null,
         $relations = null,
         $limit = null,
-        $dataKey = 'data'
+        $dataKey = 'data',
+        $pagination = true
     ) {
         $model  = $this;
         $select = $this->prepareColumns($fields, $model);
@@ -55,7 +55,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
         $filter = $this->prepareFilters($filters, $with);
         $sort   = $this->prepareSorting($sort, $filter);
 
-        return $this->paginateResult($limit, $dataKey, $sort);
+        return ($pagination) ? $this->paginateResult($limit, $dataKey, $sort) : $sort;
     }
 
     /**
@@ -141,7 +141,11 @@ class Model extends \Illuminate\Database\Eloquent\Model
     protected function interpretFilterSymbols(Builder & $model, $filter)
     {
         if (! isset($filter['compare'])) {
-            return false;
+            $filter = [
+                'field'   => key($filter),
+                'compare' => '=',
+                'value'   => $filter[key($filter)],
+            ];
         }
 
         if (array_key_exists($filter['compare'], $this->symbolMap)) {

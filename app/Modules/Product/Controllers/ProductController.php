@@ -3,14 +3,13 @@ namespace Awok\Modules\Product\Controllers;
 
 use Awok\Core\Http\Request;
 use Awok\Http\Controllers\Controller;
-use Awok\Modules\Product\Models\Product;
 
 class ProductController extends Controller
 {
     /**
-     * Registers a new store
+     * Registers a new product
      *
-     * @route /store [POST]
+     * @route /product [POST]
      *
      * @param \Awok\Core\Http\Request $request
      *
@@ -20,19 +19,19 @@ class ProductController extends Controller
     {
         $expectedFields = [
             'name',
-            'title',
             'description',
             'upc',
             'sku',
             'price',
             'currency_id',
             'store_id',
+            'attributes',
+            'taxonomies',
         ];
-        $storeData      = $request->only($expectedFields);
+        $productData    = $request->only($expectedFields);
 
         $this->validate($request, [
             'name'        => 'required|string',
-            'title'       => 'string',
             'description' => 'string',
             'upc'         => 'required|max:12|unique:products',
             'sku'         => 'required|max:12',
@@ -42,18 +41,54 @@ class ProductController extends Controller
         ]);
 
         try {
-            $createProduct = app('product')->create($storeData);
+            app('product')->create($productData);
         } catch (\Exception $e) {
-            return $this->jsonResponse('', $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e->getMessage(), 400);
         }
 
-        return $this->jsonResponse($createProduct, 'Product added successfully');
+        return $this->jsonResponse(null, 'Product added successfully');
     }
 
-    public function test()
+    /**
+     * Updates a product
+     *
+     * @route /product/{id} [PUT]
+     *
+     * @param \Awok\Core\Http\Request $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
     {
-        $product = Product::find(2)->with('attributes.values', 'attributes.options.translations')->get();
+        try {
+            app('product')->update($id, $request->all());
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e->getMessage(), 400);
+        }
 
-        return $this->jsonResponse($product->toArray());
+        return $this->jsonResponse(null, 'Product updated successfully');
+    }
+
+    public function get(Request $request, $id)
+    {
+        try {
+            $result = app('product')->get($id, $request->getFields(), $request->getRelations());
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+        }
+
+        return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Product not found', 400);
+    }
+
+    public function fetch(Request $request)
+    {
+        try {
+            $result = app('product')->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+        }
+
+        return $this->jsonResponse($result);
     }
 }

@@ -15,7 +15,6 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 255);
             $table->string('title', 255);
             $table->text('description');
             $table->string('upc', 12);
@@ -29,7 +28,6 @@ class CreateProductsTable extends Migration
             $table->timestamps();
 
             // Indexes
-            $table->index('name');
             $table->index('title');
             $table->index('upc');
             $table->index('sku');
