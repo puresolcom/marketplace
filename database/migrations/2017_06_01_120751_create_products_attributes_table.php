@@ -19,6 +19,7 @@ class CreateProductsAttributesTable extends Migration
             $table->string('type', 255);
             $table->string('data_type', 32);
             $table->text('configuration')->nullable();
+            $table->boolean('required')->nullable();
             $table->unsignedInteger('position');
             $table->timestamps();
 

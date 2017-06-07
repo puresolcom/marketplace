@@ -30,13 +30,13 @@ class Model extends \Illuminate\Database\Eloquent\Model
     /**
      * Prepares a restful query
      *
-     * @param null   $fields
-     * @param null   $filters
-     * @param null   $sort
-     * @param null   $relations
-     * @param int    $limit
-     * @param string $dataKey
-     * @param bool   $pagination
+     * @param null|array $fields
+     * @param null|array $filters
+     * @param null|array $sort
+     * @param null|array $relations
+     * @param int        $limit
+     * @param string     $dataKey    key for output data (Pagination only)
+     * @param bool       $pagination whether to paginate output
      *
      * @return mixed
      */

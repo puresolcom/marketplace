@@ -3,9 +3,20 @@ namespace Awok\Modules\Product\Controllers;
 
 use Awok\Core\Http\Request;
 use Awok\Http\Controllers\Controller;
+use Awok\Modules\Product\Services\ProductService;
 
 class ProductController extends Controller
 {
+    /**
+     * @var ProductService
+     */
+    protected $productService;
+
+    public function __construct()
+    {
+        $this->productService = app('product');
+    }
+
     /**
      * Registers a new product
      *
@@ -41,7 +52,7 @@ class ProductController extends Controller
         ]);
 
         try {
-            app('product')->create($productData);
+            $this->productService->create($productData);
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), 400);
         }
@@ -62,7 +73,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            app('product')->update($id, $request->all());
+            $this->productService->update($id, $request->all());
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), 400);
         }
@@ -70,10 +81,20 @@ class ProductController extends Controller
         return $this->jsonResponse(null, 'Product updated successfully');
     }
 
+    /**
+     * Get single product
+     *
+     * @route /product/{id} [GET]
+     *
+     * @param \Awok\Core\Http\Request $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function get(Request $request, $id)
     {
         try {
-            $result = app('product')->get($id, $request->getFields(), $request->getRelations());
+            $result = $this->productService->get($id, $request->getFields(), $request->getRelations());
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
         }
@@ -81,10 +102,19 @@ class ProductController extends Controller
         return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Product not found', 400);
     }
 
+    /**
+     * Get paginated products
+     *
+     * @route /product [GET]
+     *
+     * @param \Awok\Core\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function fetch(Request $request)
     {
         try {
-            $result = app('product')->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
+            $result = $this->productService->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
         }

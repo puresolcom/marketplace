@@ -70,7 +70,6 @@ $app->routeMiddleware([
 
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
-$app->register(Prettus\Repository\Providers\LumenRepositoryServiceProvider::class);
 $app->register(Awok\Providers\AppServiceProvider::class);
 $app->register(Awok\Providers\AuthServiceProvider::class);
 $app->register(Awok\Core\Authorization\AuthorizationServiceProvider::class);
