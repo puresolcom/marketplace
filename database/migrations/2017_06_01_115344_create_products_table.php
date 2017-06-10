@@ -19,7 +19,9 @@ class CreateProductsTable extends Migration
             $table->text('description');
             $table->string('upc', 12);
             $table->string('sku', 12);
+            $table->unsignedInteger('stock');
             $table->decimal('price', 8, 2);
+            $table->decimal('discount_price', 8, 2);
             $table->unsignedSmallInteger('currency_id');
             $table->unsignedInteger('store_id');
             $table->boolean('active')->nullable();
@@ -29,9 +31,11 @@ class CreateProductsTable extends Migration
 
             // Indexes
             $table->index('title');
+            $table->index('stock');
             $table->index('upc');
             $table->index('sku');
             $table->index('price');
+            $table->index('discount_price');
             $table->index('active');
             $table->index('approved');
             $table->index('approved_by');

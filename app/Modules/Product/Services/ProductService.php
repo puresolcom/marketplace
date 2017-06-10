@@ -6,6 +6,7 @@ use Awok\Modules\Product\Models\Attribute;
 use Awok\Modules\Product\Models\AttributeValue;
 use Awok\Modules\Product\Models\AttributeValueTranslation;
 use Awok\Modules\Product\Models\Product;
+use Awok\Modules\Taxonomy\Services\TaxonomyService;
 
 class ProductService
 {
@@ -14,9 +15,15 @@ class ProductService
      */
     protected $productModel;
 
+    /**
+     * @var TaxonomyService
+     */
+    protected $taxonomy;
+
     public function __construct(Product $product)
     {
         $this->productModel = $product;
+        $this->taxonomy     = app('taxonomy');
     }
 
     /**
@@ -58,15 +65,25 @@ class ProductService
     public function create(array $data)
     {
         // Exclude attributes and taxonomies before updating product
-        $productData = array_except($data, ['attributes', 'taxonomies']);
+        $productData = array_except($data, ['attributes', 'categories', 'tags']);
 
         \DB::beginTransaction();
 
         try {
             $product = $this->productModel->create($productData);
+
             if (! empty($data['attributes'])) {
                 // Set product attributes
                 $this->setProductAttributesValues($product, $data['attributes']);
+            }
+            if (! empty($data['categories'])) {
+                // Set product attributes
+                $this->taxonomy->setProductCategories($product, $data['categories']);
+            }
+
+            if (! empty($data['tags'])) {
+                // Set product attributes
+                $this->taxonomy->setProductTags($product, $data['tags']);
             }
         } catch (\Exception $e) {
             \DB::rollBack();
@@ -74,7 +91,7 @@ class ProductService
         }
         \DB::commit();
 
-        return $product;
+        return $product->with(['attributes', 'categories', 'tags']);
     }
 
     /**
@@ -164,11 +181,11 @@ class ProductService
         $attributesOptionsToBeAdded       = array_diff($optionsIDs, $currentAttributeValuesOptionsIds);
         $attributesOptionsToBeDeleted     = array_diff(array_merge($attributesOptionsToBeAdded, $currentAttributeValuesOptionsIds), $optionsIDs);
 
-        $currentAttributeValues->whereIn('option_id', $attributesOptionsToBeDeleted)->delete();
-
         foreach ($attributesOptionsToBeAdded as $optionID) {
             $product->attributes()->attach([$attributeInstance->id => ['option_id' => $optionID]]);
         }
+
+        $currentAttributeValues->whereIn('option_id', $attributesOptionsToBeDeleted)->delete();
     }
 
     /**
@@ -249,13 +266,27 @@ class ProductService
         \DB::beginTransaction();
 
         try {
+            if (empty($data)) {
+                throw new \Exception('No product information to update', 400);
+            }
+
             // Exclude attributes and taxonomies before updating product
-            $productData = array_except($data, ['attributes', 'taxonomies']);
+            $productData = array_except($data, ['attributes', 'categories', 'tags']);
+
             $product->fill($productData)->save();
 
             if (! empty($data['attributes'])) {
                 // Set product attributes
                 $this->setProductAttributesValues($product, $data['attributes']);
+            }
+            if (! empty($data['categories'])) {
+                // Set product attributes
+                $this->taxonomy->setProductCategories($product, $data['categories']);
+            }
+
+            if (! empty($data['tags'])) {
+                // Set product attributes
+                $this->taxonomy->setProductTags($product, $data['tags']);
             }
         } catch (\Exception $e) {
             \DB::rollBack();

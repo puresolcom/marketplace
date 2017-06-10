@@ -34,21 +34,26 @@ class ProductController extends Controller
             'upc',
             'sku',
             'price',
+            'discount_price',
+            'stock',
             'currency_id',
             'store_id',
             'attributes',
-            'taxonomies',
+            'categories',
+            'tags',
         ];
         $productData    = $request->only($expectedFields);
 
         $this->validate($request, [
-            'name'        => 'required|string',
-            'description' => 'string',
-            'upc'         => 'required|max:12|unique:products',
-            'sku'         => 'required|max:12',
-            'price'       => 'required|numeric',
-            'currency_id' => 'required|exists:currencies,id',
-            'store_id'    => 'required|exists:stores,id',
+            'name'           => 'required|string',
+            'description'    => 'string',
+            'upc'            => 'required|max:12|unique:products',
+            'sku'            => 'required|max:12',
+            'price'          => 'required|numeric',
+            'discount_price' => 'numeric',
+            'stock'          => 'required|numeric',
+            'currency_id'    => 'required|exists:currencies,id',
+            'store_id'       => 'required|exists:stores,id',
         ]);
 
         try {

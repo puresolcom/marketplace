@@ -34,4 +34,18 @@ class StoreService
 
         return $this->storeModel->create($storeData);
     }
+
+    /**
+     * Get store by id
+     *
+     * @param $id
+     * @param $fields
+     * @param $relations
+     *
+     * @return mixed
+     */
+    public function get($id, $fields, $relations)
+    {
+        return $this->storeModel->restQueryBuilder($fields, [['id' => $id]], null, $relations, null, null, false)->first();
+    }
 }

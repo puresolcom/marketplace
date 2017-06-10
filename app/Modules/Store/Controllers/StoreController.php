@@ -3,9 +3,20 @@ namespace Awok\Modules\Store\Controllers;
 
 use Awok\Core\Http\Request;
 use Awok\Http\Controllers\Controller;
+use Awok\Modules\Store\Services\StoreService;
 
 class StoreController extends Controller
 {
+    /**
+     * @var StoreService;
+     */
+    protected $store;
+
+    public function __construct()
+    {
+        $this->store = app('store');
+    }
+
     /**
      * Registers a new store
      *
@@ -39,11 +50,32 @@ class StoreController extends Controller
         ]);
 
         try {
-            $createStore = app('store')->create($storeData);
+            $createStore = $this->store->create($storeData);
         } catch (\Exception $e) {
             return $this->jsonResponse('', $e->getMessage(), 400);
         }
 
         return $this->jsonResponse($createStore, 'Store created successfully');
+    }
+
+    /**
+     * Get single store
+     *
+     * @route /store/{id} [GET]
+     *
+     * @param \Awok\Core\Http\Request $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get(Request $request, $id)
+    {
+        try {
+            $result = $this->store->get($id, $request->getFields(), $request->getRelations());
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+        }
+
+        return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Store not found', 400);
     }
 }

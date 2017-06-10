@@ -15,17 +15,17 @@ class CreateTaxonomiesTable extends Migration
     {
         Schema::create('taxonomies', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 64);
             $table->string('slug', 64)->unique();
             $table->string('type', 64);
             $table->unsignedInteger('parent_id')->nullable();
             $table->timestamps();
 
             // Indexes
-            $table->index('name');
             $table->index('slug');
             $table->index('type');
-            $table->index('parent_id');
+
+            // Foreign Keys
+            $table->foreign('parent_id')->references('id')->on('taxonomies')->onUpdate('cascade')->onDelete('restrict');
         });
     }
 
