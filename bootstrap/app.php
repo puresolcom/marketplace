@@ -81,6 +81,7 @@ $app->register(Awok\Modules\Store\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Taxonomy\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Product\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Location\Providers\ModuleServiceProvider::class);
+$app->register(Awok\Modules\Currency\Providers\ModuleServiceProvider::class);
 $app->register(\Awok\Providers\CatchAllOptionsRequestsProvider::class);
 
 /*

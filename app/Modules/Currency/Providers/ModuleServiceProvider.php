@@ -1,7 +1,7 @@
 <?php
-namespace Awok\Modules\Location\Providers;
+namespace Awok\Modules\Currency\Providers;
 
-use Awok\Modules\Location\Services\LocationService;
+use Awok\Modules\Currency\Services\CurrencyService;
 
 class ModuleServiceProvider extends \Awok\Providers\ModuleServiceProvider
 {
@@ -11,14 +11,14 @@ class ModuleServiceProvider extends \Awok\Providers\ModuleServiceProvider
 
     public function getModuleName(): string
     {
-        return 'Location';
+        return 'Currency';
     }
 
     public function register()
     {
         parent::register();
-        $this->app->singleton('location', function () {
-            return $this->app->make(LocationService::class);
+        $this->app->singleton('currency', function () {
+            return $this->app->make(CurrencyService::class);
         });
     }
 }

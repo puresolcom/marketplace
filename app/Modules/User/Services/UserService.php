@@ -2,6 +2,7 @@
 
 namespace Awok\Modules\User\Services;
 
+use Awok\Core\Foundation\BaseService;
 use Awok\Modules\User\Models\User;
 
 /**
@@ -9,16 +10,11 @@ use Awok\Modules\User\Models\User;
  *
  * @package Awok\Modules\User\Services
  */
-class UserService
+class UserService extends BaseService
 {
-    /**
-     * @var \Awok\Modules\User\Models\User
-     */
-    protected $userModel;
-
     public function __construct(User $user)
     {
-        $this->userModel = $user;
+        $this->setBaseModel($user);
     }
 
     /**
@@ -43,6 +39,6 @@ class UserService
      */
     public function create(array $userData)
     {
-        return $this->userModel->create($userData);
+        return $this->getBaseModel()->create($userData);
     }
 }

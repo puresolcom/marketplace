@@ -20,12 +20,16 @@ class AuthController extends Controller
         ];
         $registrationData   = $request->only($registrationFields);
 
-        $this->validate($request, [
+        $validator = $this->validate($request, [
             'name'          => 'required|string',
             'email'         => 'required|email|unique:users',
             'phone_primary' => 'required|numeric',
             'password'      => 'required|min:6|max:32',
         ]);
+
+        if ($validator->fails()) {
+            return $this->jsonResponse(null, 'Error while validating your input', 400, $validator->getMessageBag()->all());
+        }
 
         try {
             $registerUser = app('user')->register($registrationData);

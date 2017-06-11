@@ -16,9 +16,9 @@ class Product extends Model
             ->withTimestamps();
     }
 
-    public function taxonomies()
+    public function attributesValues()
     {
-        return $this->belongsToMany(Taxonomy::class, 'products_taxonomies', 'product_id', 'taxonomy_id')->withTimestamps();
+        return $this->hasMany(AttributeValue::class, 'product_id');
     }
 
     public function categories()
@@ -26,8 +26,18 @@ class Product extends Model
         return $this->taxonomies()->where('type', '=', 'category');
     }
 
+    public function taxonomies()
+    {
+        return $this->belongsToMany(Taxonomy::class, 'products_taxonomies', 'product_id', 'taxonomy_id')->withTimestamps();
+    }
+
     public function tags()
     {
         return $this->taxonomies()->where('type', '=', 'tag');
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(ProductTranslation::class, 'translatable_id');
     }
 }

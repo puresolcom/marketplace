@@ -12,9 +12,9 @@ class Attribute extends Model
 
     protected $hidden = ['pivot', 'configuration', 'created_at', 'updated_at'];
 
-    public function values()
+    public static function findBySlug($slug)
     {
-        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id');
+        return self::where('slug', '=', $slug)->first();
     }
 
     public function options()
@@ -25,10 +25,5 @@ class Attribute extends Model
     public function translations()
     {
         return $this->hasMany(AttributeTranslation::class, 'translatable_id', 'id');
-    }
-
-    public static function findBySlug($slug)
-    {
-        return self::where('slug', '=', $slug)->first();
     }
 }

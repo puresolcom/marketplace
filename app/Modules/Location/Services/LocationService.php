@@ -1,29 +1,67 @@
 <?php
 namespace Awok\Modules\Location\Services;
 
+use Awok\Core\Foundation\BaseService;
+use Awok\Modules\Location\Models\Country;
 use Awok\Modules\Location\Models\Location;
 
-class LocationService
+class LocationService extends BaseService
 {
     /**
-     * @var \Awok\Modules\Location\Models\Location
+     * @var Country
      */
-    protected $storeModel;
+    protected $countryModel;
 
-    public function __construct(Location $store)
+    public function __construct(Location $location, Country $country)
     {
-        $this->storeModel = $store;
+        $this->setBaseModel($location);
+        $this->countryModel = $country;
     }
 
     /**
-     * Creates a new store
+     * Query against country
      *
-     * @param array $storeData
+     * @param null $fields
+     * @param null $filters
+     * @param null $sort
+     * @param null $relations
+     * @param null $limit
+     * @param null $dataKey
      *
      * @return mixed
      */
-    public function create(array $storeData)
+    public function fetchCountries(
+        $fields = null,
+        $filters = null,
+        $sort = null,
+        $relations = null,
+        $limit = null,
+        $dataKey = null
+    ) {
+        return $this->countryModel->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
+    }
+
+    /**
+     * Creates a new location
+     *
+     * @param array $locationData
+     *
+     * @return mixed
+     */
+    public function create(array $locationData)
     {
-        return $this->storeModel->create($storeData);
+        return $this->getBaseModel()->create($locationData);
+    }
+
+    /**
+     * Create a new country
+     *
+     * @param array $countryData
+     *
+     * @return mixed
+     */
+    public function createCountry(array $countryData)
+    {
+        return $this->getBaseModel()->create($countryData);
     }
 }

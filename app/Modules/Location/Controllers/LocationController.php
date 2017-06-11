@@ -6,11 +6,11 @@ use Awok\Http\Controllers\Controller;
 use Awok\Modules\Location\Services\LocationService;
 
 /**
- * Class CountryController
+ * Class LocationController
  *
  * @package Awok\Modules\Location\Controllers
  */
-class CountryController extends Controller
+class LocationController extends Controller
 {
     /**
      * @var LocationService;
@@ -19,6 +19,7 @@ class CountryController extends Controller
 
     public function __construct()
     {
+
         $this->location = app('location');
     }
 
@@ -30,7 +31,7 @@ class CountryController extends Controller
     public function list(Request $request)
     {
         try {
-            $result = $this->location->fetchCountries($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
+            $result = $this->location->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
         }

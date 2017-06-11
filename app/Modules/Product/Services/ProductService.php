@@ -2,19 +2,15 @@
 namespace Awok\Modules\Product\Services;
 
 use Awok\Core\Eloquent\Model;
+use Awok\Core\Foundation\BaseService;
 use Awok\Modules\Product\Models\Attribute;
 use Awok\Modules\Product\Models\AttributeValue;
 use Awok\Modules\Product\Models\AttributeValueTranslation;
 use Awok\Modules\Product\Models\Product;
 use Awok\Modules\Taxonomy\Services\TaxonomyService;
 
-class ProductService
+class ProductService extends BaseService
 {
-    /**
-     * @var \Awok\Modules\Product\Models\Product
-     */
-    protected $productModel;
-
     /**
      * @var TaxonomyService
      */
@@ -22,36 +18,8 @@ class ProductService
 
     public function __construct(Product $product)
     {
-        $this->productModel = $product;
-        $this->taxonomy     = app('taxonomy');
-    }
-
-    /**
-     * Query against products
-     *
-     * @param null   $fields
-     * @param null   $filters
-     * @param null   $sort
-     * @param null   $relations
-     * @param null   $limit
-     * @param string $dataKey
-     *
-     * @return mixed
-     */
-    public function fetch(
-        $fields = null,
-        $filters = null,
-        $sort = null,
-        $relations = null,
-        $limit = null,
-        $dataKey = 'products'
-    ) {
-        return $this->productModel->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
-    }
-
-    public function get($id, $fields, $relations)
-    {
-        return $this->productModel->restQueryBuilder($fields, [['id' => $id]], null, $relations, null, null, false)->first();
+        $this->setBaseModel($product);
+        $this->taxonomy = app('taxonomy');
     }
 
     /**
@@ -64,25 +32,32 @@ class ProductService
      */
     public function create(array $data)
     {
+        $translatables = ['title', 'description'];
+        $relations     = ['attributes', 'categories', 'tags'];
         // Exclude attributes and taxonomies before updating product
-        $productData = array_except($data, ['attributes', 'categories', 'tags']);
+        $productData = array_except($data, array_merge($translatables, $relations));
+
+        $validTranslations = $this->validateTranslatable($data, $translatables);
+
+        if (! $validTranslations) {
+            throw new \Exception('Invalid translations format');
+        }
 
         \DB::beginTransaction();
-
         try {
-            $product = $this->productModel->create($productData);
+            $product = $this->getBaseModel()->create($productData);
+
+            $this->setTranslation($product, array_only($data, $translatables), $translatables);
 
             if (! empty($data['attributes'])) {
-                // Set product attributes
                 $this->setProductAttributesValues($product, $data['attributes']);
             }
+
             if (! empty($data['categories'])) {
-                // Set product attributes
                 $this->taxonomy->setProductCategories($product, $data['categories']);
             }
 
             if (! empty($data['tags'])) {
-                // Set product attributes
                 $this->taxonomy->setProductTags($product, $data['tags']);
             }
         } catch (\Exception $e) {
@@ -92,6 +67,41 @@ class ProductService
         \DB::commit();
 
         return $product->with(['attributes', 'categories', 'tags']);
+    }
+
+    public function validateTranslatable(array $data, array $keys)
+    {
+        foreach ($keys as $key) {
+            if (! array_has($data, $key)) {
+                return false;
+            }
+
+            foreach ($data[$key] as $translation) {
+                if (! array_key_exists('locale', $translation) || ! array_key_exists('value', $translation)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function setTranslation(Product $model, array $data, array $keys)
+    {
+        \DB::beginTransaction();
+        foreach ($keys as $key) {
+            foreach ($data[$key] as $translation) {
+                $translated = $model->translations()->updateOrCreate(['locale' => $translation['locale']], [$key => $translation['value']]);
+                if (! $translated) {
+                    \DB::rollBack();
+
+                    return false;
+                }
+            }
+        }
+        \DB::commit();
+
+        return true;
     }
 
     /**
@@ -106,6 +116,7 @@ class ProductService
     public function setProductAttributesValues(Model $product, array $attributes)
     {
         $attributes = $this->normalizeAttributes($attributes);
+
         foreach ($attributes as $attribute) {
             $this->setProductAttributeValue($product, $attribute['slug'], $attribute['translations'], $attribute['options_ids']);
         }
@@ -257,35 +268,41 @@ class ProductService
      */
     public function update($id, array $data)
     {
-        $product = $this->productModel->find($id);
+        $product = $this->getBaseModel()->find($id);
 
         if (! $product) {
             throw new \Exception('Product could not be found', 400);
         }
-
-        \DB::beginTransaction();
 
         try {
             if (empty($data)) {
                 throw new \Exception('No product information to update', 400);
             }
 
+            $translatables = ['title', 'description'];
+            $relations     = ['attributes', 'categories', 'tags'];
             // Exclude attributes and taxonomies before updating product
-            $productData = array_except($data, ['attributes', 'categories', 'tags']);
+            $productData = array_except($data, array_merge($translatables, $relations));
 
+            $validTranslations = $this->validateTranslatable($data, $translatables);
+
+            if (! $validTranslations) {
+                throw new \Exception('Invalid translations format');
+            }
+
+            \DB::beginTransaction();
             $product->fill($productData)->save();
 
+            $this->setTranslation($product, array_only($data, $translatables), $translatables);
+
             if (! empty($data['attributes'])) {
-                // Set product attributes
                 $this->setProductAttributesValues($product, $data['attributes']);
             }
             if (! empty($data['categories'])) {
-                // Set product attributes
                 $this->taxonomy->setProductCategories($product, $data['categories']);
             }
 
             if (! empty($data['tags'])) {
-                // Set product attributes
                 $this->taxonomy->setProductTags($product, $data['tags']);
             }
         } catch (\Exception $e) {
@@ -306,6 +323,6 @@ class ProductService
      */
     public function delete($id)
     {
-        return ($delete = $this->productModel->find($id)) ? $delete->delete() : false;
+        return ($delete = $this->getBaseModel()->find($id)) ? $delete->delete() : false;
     }
 }

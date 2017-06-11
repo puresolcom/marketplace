@@ -1,18 +1,14 @@
 <?php
 namespace Awok\Modules\Store\Services;
 
+use Awok\Core\Foundation\BaseService;
 use Awok\Modules\Store\Models\Store;
 
-class StoreService
+class StoreService extends BaseService
 {
-    /**
-     * @var \Awok\Modules\Store\Models\Store
-     */
-    protected $storeModel;
-
     public function __construct(Store $store)
     {
-        $this->storeModel = $store;
+        $this->setBaseModel($store);
     }
 
     /**
@@ -32,20 +28,6 @@ class StoreService
             $storeData['user_id'] = app('auth')->user()->id;
         }
 
-        return $this->storeModel->create($storeData);
-    }
-
-    /**
-     * Get store by id
-     *
-     * @param $id
-     * @param $fields
-     * @param $relations
-     *
-     * @return mixed
-     */
-    public function get($id, $fields, $relations)
-    {
-        return $this->storeModel->restQueryBuilder($fields, [['id' => $id]], null, $relations, null, null, false)->first();
+        return $this->getBaseModel()->create($storeData);
     }
 }

@@ -2,13 +2,14 @@
 
 namespace Awok\Modules\Taxonomy\Services;
 
+use Awok\Core\Foundation\BaseService;
 use Awok\Modules\Option\Services\OptionService;
 use Awok\Modules\Product\Models\Product;
 use Awok\Modules\Taxonomy\Models\Taxonomy;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Collection;
 
-class TaxonomyService
+class TaxonomyService extends BaseService
 {
     /**
      * @var OptionService
@@ -17,9 +18,10 @@ class TaxonomyService
 
     protected $taxonomies = [];
 
-    public function __construct()
+    public function __construct(Taxonomy $taxonomyModel)
     {
         $this->option = app('option');
+        $this->setBaseModel($taxonomyModel);
         $this->registerDefaultTaxonomies();
     }
 
@@ -103,7 +105,7 @@ class TaxonomyService
         if (! is_array($name)) {
             $translations[] = [
                 'locale' => app('config')->get('app.locale'),
-                'value'  => $name,
+                'name'   => $name,
             ];
         } else {
             $translations = $name;
@@ -150,6 +152,18 @@ class TaxonomyService
     public function getTerm($id)
     {
         return Taxonomy::find($id);
+    }
+
+    /**
+     * @param $slug
+     *
+     * @return int count of similar slug existence
+     */
+    protected function termSlugExists($slug)
+    {
+        $slugExists = Taxonomy::where('slug', 'regexp', "^{$slug}-?[0-9]*$")->count();
+
+        return $slugExists;
     }
 
     /**
@@ -277,17 +291,5 @@ class TaxonomyService
         }
 
         return true;
-    }
-
-    /**
-     * @param $slug
-     *
-     * @return int count of similar slug existence
-     */
-    protected function termSlugExists($slug)
-    {
-        $slugExists = Taxonomy::where('slug', 'regexp', "^{$slug}-?[0-9]*$")->count();
-
-        return $slugExists;
     }
 }

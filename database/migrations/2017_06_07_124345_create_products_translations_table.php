@@ -16,8 +16,8 @@ class CreateProductsTranslationsTable extends Migration
         Schema::create('products_translations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('translatable_id');
-            $table->string('title', 255);
-            $table->text('description');
+            $table->string('title', 255)->nullable();
+            $table->text('description')->nullable();
             $table->string('locale', 5);
 
             // Indexes
@@ -25,7 +25,7 @@ class CreateProductsTranslationsTable extends Migration
             $table->index('locale');
 
             // Foreign Keys
-            $table->foreign('translatable_id')->references('id')->on('products_attributes_options')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('translatable_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

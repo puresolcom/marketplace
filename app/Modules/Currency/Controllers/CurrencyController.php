@@ -1,25 +1,25 @@
 <?php
-namespace Awok\Modules\Location\Controllers;
+namespace Awok\Modules\Currency\Controllers;
 
 use Awok\Core\Http\Request;
 use Awok\Http\Controllers\Controller;
-use Awok\Modules\Location\Services\LocationService;
+use Awok\Modules\Currency\Services\CurrencyService;
 
 /**
- * Class CountryController
+ * Class CurrencyController
  *
- * @package Awok\Modules\Location\Controllers
+ * @package Awok\Modules\Currency\Controllers
  */
-class CountryController extends Controller
+class CurrencyController extends Controller
 {
     /**
-     * @var LocationService;
+     * @var CurrencyService
      */
-    protected $location;
+    protected $currency;
 
     public function __construct()
     {
-        $this->location = app('location');
+        $this->currency = app('currency');
     }
 
     /**
@@ -30,7 +30,7 @@ class CountryController extends Controller
     public function list(Request $request)
     {
         try {
-            $result = $this->location->fetchCountries($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
+            $result = $this->currency->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
         }

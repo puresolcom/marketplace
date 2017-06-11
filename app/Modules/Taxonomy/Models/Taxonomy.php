@@ -6,11 +6,11 @@ use Awok\Core\Eloquent\Model;
 
 class Taxonomy extends Model
 {
-    protected $guarded = [];
-
     public $timestamps = true;
 
     public $hidden = ['pivot', 'created_at', 'updated_at'];
+
+    protected $guarded = [];
 
     public function translations()
     {

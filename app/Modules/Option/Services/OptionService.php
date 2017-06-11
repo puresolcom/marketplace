@@ -2,10 +2,16 @@
 
 namespace Awok\Modules\Option\Services;
 
+use Awok\Core\Foundation\BaseService;
 use Awok\Modules\Option\Models\Option;
 
-class OptionService
+class OptionService extends BaseService
 {
+    public function __construct(Option $option)
+    {
+        $this->setBaseModel($option);
+    }
+
     /**
      * Get Option
      *

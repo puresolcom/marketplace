@@ -29,7 +29,7 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         $expectedFields = [
-            'name',
+            'title',
             'description',
             'upc',
             'sku',
@@ -44,9 +44,9 @@ class ProductController extends Controller
         ];
         $productData    = $request->only($expectedFields);
 
-        $this->validate($request, [
-            'name'           => 'required|string',
-            'description'    => 'string',
+        $validator = $this->validate($request, [
+            'title'          => 'required',
+            'description'    => 'required',
             'upc'            => 'required|max:12|unique:products',
             'sku'            => 'required|max:12',
             'price'          => 'required|numeric',
@@ -55,6 +55,10 @@ class ProductController extends Controller
             'currency_id'    => 'required|exists:currencies,id',
             'store_id'       => 'required|exists:stores,id',
         ]);
+
+        if ($validator->fails()) {
+            return $this->jsonResponse(null, 'Error while validating your input', 400, $validator->getMessageBag()->all());
+        }
 
         try {
             $this->productService->create($productData);
