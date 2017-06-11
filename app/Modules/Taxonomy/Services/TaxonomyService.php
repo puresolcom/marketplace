@@ -70,13 +70,12 @@ class TaxonomyService extends BaseService
 
         $type     = $args['type'];
         $parentID = $args['parent_id'] ?? null;
-        $name     = $args['name'] ?? $term;
+        $name     = $translations = $args['name'] ?? $term;
         $slug     = isset($args['slug']) ? str_slug($args['slug']) : (is_string($name) ? str_slug($name) : null);
 
         if (! $slug) {
             throw new \Exception('Could not detect a slug');
         }
-
         try {
             $this->parentTermMatches($parentID, $type);
         } catch (\Exception $e) {
@@ -92,16 +91,13 @@ class TaxonomyService extends BaseService
         }
 
         \DB::beginTransaction();
+
         $createdTaxonomyTerm = Taxonomy::create(['slug' => $slug, 'type' => $type, 'parent_id' => $parentID]);
 
         if (! is_array($name)) {
-            $translations[] = [
-                'locale' => app('config')->get('app.locale'),
-                'name'   => $name,
-            ];
-        } else {
-            $translations = $name;
+            $translations[] = ['locale' => app('config')->get('app.locale'), 'name' => $name];
         }
+
         if ($createdTaxonomyTerm) {
             try {
                 $this->setTermTranslation($createdTaxonomyTerm, $translations);
@@ -110,7 +106,6 @@ class TaxonomyService extends BaseService
                 throw $e;
             }
         }
-
         \DB::commit();
 
         return true;
