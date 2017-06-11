@@ -71,8 +71,7 @@ class TaxonomyService extends BaseService
         $type     = $args['type'];
         $parentID = $args['parent_id'] ?? null;
         $name     = $args['name'] ?? $term;
-
-        $slug = isset($args['slug']) ? str_slug($args['slug']) : (is_string($name) ? str_slug($name) : null);
+        $slug     = isset($args['slug']) ? str_slug($args['slug']) : (is_string($name) ? str_slug($name) : null);
 
         if (! $slug) {
             throw new \Exception('Could not detect a slug');
@@ -88,20 +87,13 @@ class TaxonomyService extends BaseService
 
         if ($slugExists && isset($args['slug'])) {
             throw new \Exception("Taxonomy Slug {$slug} already exists");
-        }
-
-        if ($slugExists) {
+        } elseif ($slugExists && ! isset($args['slug'])) {
             $slug .= '-'.$slugExists;
         }
 
         \DB::beginTransaction();
-        $createdTaxonomyTerm = Taxonomy::create([
-            'slug'      => $slug,
-            'type'      => $type,
-            'parent_id' => $parentID,
-        ]);
+        $createdTaxonomyTerm = Taxonomy::create(['slug' => $slug, 'type' => $type, 'parent_id' => $parentID]);
 
-        $translations = [];
         if (! is_array($name)) {
             $translations[] = [
                 'locale' => app('config')->get('app.locale'),

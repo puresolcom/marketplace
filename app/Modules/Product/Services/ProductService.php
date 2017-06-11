@@ -49,17 +49,7 @@ class ProductService extends BaseService
 
             $this->setTranslation($product, array_only($data, $translatables), $translatables);
 
-            if (! empty($data['attributes'])) {
-                $this->setProductAttributesValues($product, $data['attributes']);
-            }
-
-            if (! empty($data['categories'])) {
-                $this->taxonomy->setProductCategories($product, $data['categories']);
-            }
-
-            if (! empty($data['tags'])) {
-                $this->taxonomy->setProductTags($product, $data['tags']);
-            }
+            $this->setProductAssociations($data, $product);
         } catch (\Exception $e) {
             \DB::rollBack();
             throw new \Exception($e->getMessage(), $e->getCode());
@@ -113,7 +103,7 @@ class ProductService extends BaseService
      * @return mixed
      * @throws \Exception
      */
-    public function setProductAttributesValues(Model $product, array $attributes)
+    public function setProductAttributes(Model $product, array $attributes)
     {
         $attributes = $this->normalizeAttributes($attributes);
 
@@ -274,11 +264,11 @@ class ProductService extends BaseService
             throw new \Exception('Product could not be found', 400);
         }
 
-        try {
-            if (empty($data)) {
-                throw new \Exception('No product information to update', 400);
-            }
+        if (empty($data)) {
+            throw new \Exception('No product information to update', 400);
+        }
 
+        try {
             $translatables = ['title', 'description'];
             $relations     = ['attributes', 'categories', 'tags'];
             // Exclude attributes and taxonomies before updating product
@@ -295,16 +285,7 @@ class ProductService extends BaseService
 
             $this->setTranslation($product, array_only($data, $translatables), $translatables);
 
-            if (! empty($data['attributes'])) {
-                $this->setProductAttributesValues($product, $data['attributes']);
-            }
-            if (! empty($data['categories'])) {
-                $this->taxonomy->setProductCategories($product, $data['categories']);
-            }
-
-            if (! empty($data['tags'])) {
-                $this->taxonomy->setProductTags($product, $data['tags']);
-            }
+            $this->setProductAssociations($data, $product);
         } catch (\Exception $e) {
             \DB::rollBack();
             throw new \Exception($e->getMessage(), $e->getCode());
@@ -324,5 +305,24 @@ class ProductService extends BaseService
     public function delete($id)
     {
         return ($delete = $this->getBaseModel()->find($id)) ? $delete->delete() : false;
+    }
+
+    /**
+     * @param array $data
+     * @param       $product
+     */
+    protected function setProductAssociations(array $data, $product)
+    {
+        if (! empty($data['attributes'])) {
+            $this->setProductAttributes($product, $data['attributes']);
+        }
+
+        if (! empty($data['categories'])) {
+            $this->taxonomy->setProductCategories($product, $data['categories']);
+        }
+
+        if (! empty($data['tags'])) {
+            $this->taxonomy->setProductTags($product, $data['tags']);
+        }
     }
 }
