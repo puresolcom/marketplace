@@ -95,6 +95,25 @@ class ProductService extends BaseService
     }
 
     /**
+     * @param array $data
+     * @param       $product
+     */
+    protected function setProductAssociations(array $data, $product)
+    {
+        if (! empty($data['attributes'])) {
+            $this->setProductAttributes($product, $data['attributes']);
+        }
+
+        if (! empty($data['categories'])) {
+            $this->taxonomy->setProductCategories($product, $data['categories']);
+        }
+
+        if (! empty($data['tags'])) {
+            $this->taxonomy->setProductTags($product, $data['tags']);
+        }
+    }
+
+    /**
      * Set product attributes values
      *
      * @param \Awok\Core\Eloquent\Model $product
@@ -305,24 +324,5 @@ class ProductService extends BaseService
     public function delete($id)
     {
         return ($delete = $this->getBaseModel()->find($id)) ? $delete->delete() : false;
-    }
-
-    /**
-     * @param array $data
-     * @param       $product
-     */
-    protected function setProductAssociations(array $data, $product)
-    {
-        if (! empty($data['attributes'])) {
-            $this->setProductAttributes($product, $data['attributes']);
-        }
-
-        if (! empty($data['categories'])) {
-            $this->taxonomy->setProductCategories($product, $data['categories']);
-        }
-
-        if (! empty($data['tags'])) {
-            $this->taxonomy->setProductTags($product, $data['tags']);
-        }
     }
 }

@@ -41,6 +41,13 @@ abstract class BaseService
         return $this->getBaseModel()->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
     }
 
+    /**
+     * @param $id
+     * @param $fields
+     * @param $relations
+     *
+     * @return mixed
+     */
     public function get($id, $fields, $relations)
     {
         return $this->getBaseModel()->restQueryBuilder($fields, [['id' => $id]], null, $relations, null, null, false)->first();

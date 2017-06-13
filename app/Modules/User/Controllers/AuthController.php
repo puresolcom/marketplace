@@ -9,6 +9,28 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AuthController extends Controller
 {
+    /**
+     * @api            {post}  /user/auth/register   Register
+     * @apiDescription Registers a new user into the marketplace
+     * @apiGroup       Authentication
+     * @apiParam {String}   name                First name
+     * @apiParam {String}   email               E-mail Address
+     * @apiParam {String}   phone_primary       Primary Phone number
+     * @apiParam {String}   [phone_secondary]   Secondary Phone number
+     * @apiParam {String}   password            Password
+     * @apiParamExample {json} Request-Example:
+     * {
+     *  "name" : "Mohammed Anwar",
+     *  "email": "mohammed@anwar.tld",
+     *  "phone_primary": "1234567890",
+     *  "phone_secondary": "1234567890",
+     *  "password" : "p@ssw0rd"
+     * }
+     *
+     * @param \Awok\Core\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function register(Request $request)
     {
         $registrationFields = [
@@ -41,6 +63,17 @@ class AuthController extends Controller
     }
 
     /**
+     * @api            {post}     /user/auth/login    Login
+     * @apiDescription Log a user into the  system and return OAuth 2 Tokens
+     * @apiGroup       Authentication
+     * @apiParam {String}   username            Username/Email
+     * @apiParam {String}   Password            Password
+     * @apiParamExample {json} Request-Example:
+     * {
+     *  "username" : "awesomeuser@exmaple.com",
+     *  "password" : "p@ssw0rd"
+     * }
+     *
      * @param \Psr\Http\Message\ServerRequestInterface $serverRequest
      *
      * @return mixed
@@ -48,10 +81,5 @@ class AuthController extends Controller
     public function login(ServerRequestInterface $serverRequest)
     {
         return app(AccessTokenController::class)->issueToken($serverRequest);
-    }
-
-    public function protected ()
-    {
-        return 'Welcome !';
     }
 }

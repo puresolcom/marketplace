@@ -119,6 +119,8 @@ class Request extends \Illuminate\Http\Request
                 $relationFragments = explode('.', $sort);
                 $orderBy           = array_pop($relationFragments);
                 $relationName      = implode('.', $relationFragments);
+            } else {
+                $orderBy = $sort;
             }
 
             if (strpos($sort, '!', 0) === 0) {

@@ -63,9 +63,11 @@ class StoreController extends Controller
     }
 
     /**
-     * Get single store
-     *
-     * @route /store/{id} [GET]
+     * @api                     {get}   /store/:id   Get Store
+     * @apiDescription          Finds a specific object using the provided :id segment
+     * @apiGroup                Store
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
      *
      * @param \Awok\Core\Http\Request $request
      * @param                         $id
@@ -84,9 +86,14 @@ class StoreController extends Controller
     }
 
     /**
-     * Get paginated stores
-     *
-     * @route /product [GET]
+     * @api                     {get}   /store      Stores List
+     * @apiDescription          Getting paginated objects list
+     * @apiGroup                Store
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
+     * @apiParam {String}       [q]                  Comma-separated list of filters
+     * @apiParam {String}       [sort]               Comma-separated list of sorting rules
+     * @apiParam {Number}       [limit]              Max number of results per response
      *
      * @param \Awok\Core\Http\Request $request
      *

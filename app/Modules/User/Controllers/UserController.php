@@ -19,9 +19,11 @@ class UserController extends Controller
     }
 
     /**
-     * Get single user
-     *
-     * @route /user/{id} [GET]
+     * @api                     {get}   /user/:id   Get User
+     * @apiDescription          Finds a specific object using the provided :id segment
+     * @apiGroup                User
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
      *
      * @param \Awok\Core\Http\Request $request
      * @param                         $id
@@ -40,9 +42,14 @@ class UserController extends Controller
     }
 
     /**
-     * Get paginated users
-     *
-     * @route /product [GET]
+     * @api                     {get}   /user       Users List
+     * @apiDescription          Getting paginated objects list
+     * @apiGroup                User
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
+     * @apiParam {String}       [q]                  Comma-separated list of filters
+     * @apiParam {String}       [sort]               Comma-separated list of sorting rules
+     * @apiParam {Number}       [limit]              Max number of results per response
      *
      * @param \Awok\Core\Http\Request $request
      *

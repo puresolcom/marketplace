@@ -8,13 +8,18 @@ class Attribute extends Model
 {
     protected $table = 'products_attributes';
 
-    protected $guarded = [];
+    protected $guarded = ['values'];
 
-    protected $hidden = ['pivot', 'configuration', 'created_at', 'updated_at'];
+    protected $hidden = ['pivot', 'created_at', 'updated_at', 'values'];
 
     public static function findBySlug($slug)
     {
         return self::where('slug', '=', $slug)->first();
+    }
+
+    public function values()
+    {
+        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id');
     }
 
     public function options()

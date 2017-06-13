@@ -91,9 +91,11 @@ class ProductController extends Controller
     }
 
     /**
-     * Get single product
-     *
-     * @route /product/{id} [GET]
+     * @api                     {get}   /product/:id   Get Product
+     * @apiDescription          Finds a specific object using the provided :id segment
+     * @apiGroup                Product
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
      *
      * @param \Awok\Core\Http\Request $request
      * @param                         $id
@@ -112,9 +114,14 @@ class ProductController extends Controller
     }
 
     /**
-     * Get paginated products
-     *
-     * @route /product [GET]
+     * @api                     {get}   /product  Products List
+     * @apiDescription          Getting paginated objects list
+     * @apiGroup                Product
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
+     * @apiParam {String}       [q]                  Comma-separated list of filters
+     * @apiParam {String}       [sort]               Comma-separated list of sorting rules
+     * @apiParam {Number}       [limit]              Max number of results per response
      *
      * @param \Awok\Core\Http\Request $request
      *

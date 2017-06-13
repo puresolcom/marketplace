@@ -62,30 +62,19 @@ class TaxonomyService extends BaseService
      * @return bool
      * @throws \Exception
      */
-    public function addTerm($term, array $args)
+    public function createTerm($term, array $args)
     {
-        if (! isset($args['type']) || ! array_key_exists($args['type'], $this->getTaxonomies())) {
-            throw new \Exception('Invalid term type/taxonomy');
-        }
-
-        $type     = $args['type'];
+        $type     = $args['type'] ?? null;
         $parentID = $args['parent_id'] ?? null;
-        $name     = $translations = $args['name'] ?? $term;
+        $name     = $args['name'] ?? $term;
         $slug     = isset($args['slug']) ? str_slug($args['slug']) : (is_string($name) ? str_slug($name) : null);
 
-        if (! $slug) {
-            throw new \Exception('Could not detect a slug');
-        }
-        try {
-            $this->parentTermMatches($parentID, $type);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $this->termPrechecks($type, $slug, $parentID);
 
         $slugExists = $this->termSlugExists($slug);
 
         if ($slugExists && isset($args['slug'])) {
-            throw new \Exception("Taxonomy Slug {$slug} already exists");
+            throw new \Exception("Taxonomy Slug ({$slug}) already exists");
         } elseif ($slugExists && ! isset($args['slug'])) {
             $slug .= '-'.$slugExists;
         }
@@ -96,6 +85,8 @@ class TaxonomyService extends BaseService
 
         if (! is_array($name)) {
             $translations[] = ['locale' => app('config')->get('app.locale'), 'name' => $name];
+        } else {
+            $translations = $name;
         }
 
         if ($createdTaxonomyTerm) {
@@ -111,6 +102,45 @@ class TaxonomyService extends BaseService
         return true;
     }
 
+    /**
+     * @param $type
+     * @param $slug
+     * @param $parentID
+     *
+     * @throws \Exception
+     */
+    protected function termPrechecks($type, $slug, $parentID)
+    {
+        if (! $this->validTaxonomyType($type)) {
+            throw new \Exception('Invalid term type/taxonomy');
+        }
+
+        if (! $slug) {
+            throw new \Exception('Could not detect a slug');
+        }
+        try {
+            $this->parentTermMatches($parentID, $type);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Determine if taxonomy type is valid
+     *
+     * @param $type
+     *
+     * @return bool
+     */
+    protected function validTaxonomyType($type)
+    {
+        if (! isset($type) || ! array_key_exists($type, $this->getTaxonomies())) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getTaxonomies()
     {
         return $this->taxonomies;
@@ -121,6 +151,7 @@ class TaxonomyService extends BaseService
      * @param $type
      *
      * @throws \Exception
+     * @return bool
      */
     protected function parentTermMatches($parentID, $type)
     {
@@ -134,6 +165,8 @@ class TaxonomyService extends BaseService
                 throw new \Exception('Parent/child term type mis-match');
             }
         }
+
+        return true;
     }
 
     public function getTerm($id)
@@ -157,27 +190,90 @@ class TaxonomyService extends BaseService
      * @param $translations
      * @param $term
      *
-     * @throws \Exception
+     * @return  bool;
      */
     protected function setTermTranslation(Taxonomy $term, $translations)
     {
         foreach ($translations as $translation) {
-            if (! isset($translation['name'])) {
-                throw new \Exception('No term name was submitted');
+            $locale = $translation['locale'] ?? null;
+            if (! $locale) {
+                $locale = app('config')->get('app.locale');
             }
-            $name = $translation['name'];
-            $term->translations()->updateOrCreate(
-                [
-                    'locale' => $translation['locale'] ?? app('config')->get('app.locale'),
-                ],
-                [
-                    'name' => $name,
-                ]);
+            $name = $translation['name'] ?? null;
+
+            if ($name) {
+                $term->translations()->updateOrCreate(
+                    [
+                        'locale' => $locale,
+                    ],
+                    [
+                        'name' => $name,
+                    ]);
+            } else {
+                $term->translations()->where('locale', '=', $locale)->delete();
+            }
         }
+
+        return true;
     }
 
-    public function update($slug, $type, $locale = null)
+    /**
+     * Update current term
+     *
+     * @param       $termID
+     * @param array $args
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function updateTerm($termID, array $args)
     {
+        $term = Taxonomy::find($termID);
+
+        if (! $term) {
+            throw new \Exception("Taxonomy term ID: ({$termID}) cannot be found");
+        }
+
+        $name        = $args['name'] ?? null;
+        $type        = $args['type'] ?? null;
+        $parentID    = $args['parent_id'] ?? null;
+        $currentSlug = $term->slug;
+
+        if (isset($args['slug']) && $slugExists = $this->termSlugExists($currentSlug)) {
+            throw new \Exception("Taxonomy Slug ({$currentSlug}) is reserved");
+        }
+
+        if ($type && ! $this->validTaxonomyType($type)) {
+            throw new \Exception('Invalid term type/taxonomy');
+        }
+
+        try {
+            $this->parentTermMatches($parentID, $type);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        \DB::beginTransaction();
+
+        $updatedTaxonomyTerm = $term->update(array_only($args, ['slug', 'type', 'parent_id']));
+
+        if (isset($name) && ! is_array($name)) {
+            $translations[] = ['locale' => app('config')->get('app.locale'), 'name' => $name];
+        } elseif (isset($name)) {
+            $translations = $name;
+        }
+
+        if ($updatedTaxonomyTerm && isset($translations)) {
+            try {
+                $this->setTermTranslation($term, $translations);
+            } catch (\Exception $e) {
+                \DB::rollBack();
+                throw $e;
+            }
+        }
+        \DB::commit();
+
+        return true;
     }
 
     /**

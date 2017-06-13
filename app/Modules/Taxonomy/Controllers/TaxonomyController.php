@@ -18,10 +18,85 @@ class TaxonomyController extends Controller
         $this->taxonomyService = app('taxonomy');
     }
 
+    /**
+     * @api            {put}               /taxonomy   Update term
+     * @apiDescription Update a current taxonomy term
+     * @apiGroup       Taxonomy
+     * @apiParam       {String}             [type]          Taxonomy Term Type
+     * @apiParam       {Object[]}           [name]          Taxonomy Term name (If string is used value will be
+     *                 inserted as default locale "en")
+     * @apiParam       {String}             [slug]          Taxonomy Slug for term (Required in case of multilingual
+     *                 name
+     * @apiParam       {Number}             [parent_id]     Taxonomy Term parent ID
+     *                 values)
+     * @apiParamExample {json} Request-Example:
+     *{
+     *    "type": "category",
+     *    "slug": "mobile-phones",
+     *    "parent_id" : 100,
+     *    "name": [
+     *      {
+     *      "locale": "en",
+     *      "name"  : "Mobile Phones"
+     *      },
+     *      {
+     *      "locale": "ar",
+     *      "name"  : "هواتف جوالة"
+     *      }
+     *    ]
+     *}
+     *
+     * @param \Awok\Core\Http\Request $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $this->taxonomyService->updateTerm($id, $request->all());
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e->getMessage(), 400);
+        }
+
+        return $this->jsonResponse(null, 'Taxonomy term updated successfully');
+    }
+
+    /**
+     * @api            {post}               /taxonomy   Create term
+     * @apiDescription Create a new taxonomy term
+     * @apiGroup       Taxonomy
+     * @apiParam       {Object[]}           name        Taxonomy Term name (If string is used value will be inserted as
+     *                 default locale "en")
+     * @apiParam       {String}             type        Taxonomy Term Type
+     * @apiParam       {String}             [slug]      Taxonomy Slug for term (Required in case of non-string name)
+     * @apiParam       {Number}             [parent_id] Taxonomy Term parent ID
+     *                 values)
+     * @apiParamExample {json} Request-Example:
+     *{
+     *    "type": "category",
+     *    "slug": "mobile-phones",
+     *    "parent_id" : 100,
+     *    "name": [
+     *      {
+     *      "locale": "en",
+     *      "name"  : "Mobile Phones"
+     *      },
+     *      {
+     *      "locale": "ar",
+     *      "name"  : "هواتف جوالة"
+     *      }
+     *    ]
+     *}
+     *
+     * @param \Awok\Core\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request)
     {
         try {
-            $this->taxonomyService->addTerm($request->get('name'), $request->except('name'));
+            $this->taxonomyService->createTerm($request->get('name'), $request->except('name'));
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), 400);
         }
@@ -30,9 +105,11 @@ class TaxonomyController extends Controller
     }
 
     /**
-     * Get single term
-     *
-     * @route /product/{id} [GET]
+     * @api                     {get}   /taxonomy/:id   Get Taxonomy
+     * @apiDescription          Finds a specific object using the provided :id segment
+     * @apiGroup                Taxonomy
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
      *
      * @param \Awok\Core\Http\Request $request
      * @param                         $id
@@ -51,9 +128,14 @@ class TaxonomyController extends Controller
     }
 
     /**
-     * Get paginated terms
-     *
-     * @route /product [GET]
+     * @api                     {get}   /taxonomy  Taxonomies List
+     * @apiDescription          Getting paginated objects list
+     * @apiGroup                Taxonomy
+     * @apiParam {String}       [fields]             Comma-separated list of required fields
+     * @apiParam {String}       [with]               Comma-separated list of object relations
+     * @apiParam {String}       [q]                  Comma-separated list of filters
+     * @apiParam {String}       [sort]               Comma-separated list of sorting rules
+     * @apiParam {Number}       [limit]              Max number of results per response
      *
      * @param \Awok\Core\Http\Request $request
      *

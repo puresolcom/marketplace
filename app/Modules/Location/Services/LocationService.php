@@ -42,6 +42,18 @@ class LocationService extends BaseService
     }
 
     /**
+     * @param $id
+     * @param $fields
+     * @param $relations
+     *
+     * @return mixed
+     */
+    public function getCountry($id, $fields, $relations)
+    {
+        return $this->countryModel->restQueryBuilder($fields, [['id' => $id]], null, $relations, null, null, false)->first();
+    }
+
+    /**
      * Creates a new location
      *
      * @param array $locationData
