@@ -23,7 +23,7 @@ class CountryController extends Controller
     }
 
     /**
-     * @api                     {get}   /location/country/:id   Get Country
+     * @api                     {get}   /location/country/:id   1. Get Country
      * @apiDescription          Finds a specific object using the provided :id segment
      * @apiGroup                Country
      * @apiParam {String}       [fields]             Comma-separated list of required fields
@@ -46,7 +46,7 @@ class CountryController extends Controller
     }
 
     /**
-     * @api                     {get}   /location/country  Countries List
+     * @api                     {get}   /location/country  2. Countries List
      * @apiDescription          Getting paginated objects list
      * @apiGroup                Country
      * @apiParam {String}       [fields]             Comma-separated list of required fields
@@ -68,5 +68,101 @@ class CountryController extends Controller
         }
 
         return $this->jsonResponse($result);
+    }
+
+    /**
+     * @api             {POST}                 /location/country      3. Create Country
+     * @apiDescription  Create a new currency
+     * @apiGroup        Country
+     * @apiParam       {String}             name                    Name of the Country
+     * @apiParam       {String}             slug                    Country code name
+     * @apiParamExample {json}  Request-Example
+     * {
+     *  "name" : "Saudi Arabia",
+     *  "slug" : "SA"
+     * }
+     *
+     * @param \Awok\Core\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        $expectedFields = ['name', 'slug'];
+        $currencyData   = $request->only($expectedFields);
+
+        $validator = $this->validate($request, [
+            'name' => 'required',
+            'slug' => 'required|alpha_dash|unique:countries',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->jsonResponse(null, 'Error while validating your input', 400, $validator->getMessageBag()->all());
+        }
+
+        $created = $this->location->createCountry($currencyData);
+
+        if (! $created) {
+            return $this->jsonResponse(null, 'Unable to add country', 400);
+        }
+
+        return $this->jsonResponse($created, 'Country added successfully');
+    }
+
+    /**
+     * @api            {PUT}                 /country/:id            4. Update country
+     * @apiDescription Update country information
+     * @apiGroup       Country
+     * @apiParam       {String}             [name]                    Name of the country
+     * @apiParamExample {json}  Request-Example
+     * {
+     *  "name" : "Saudi Arabia"
+     * }
+     *
+     * @param \Awok\Core\Http\Request $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $expectedFields = ['name'];
+        $countryData    = $request->only($expectedFields);
+
+        try {
+            $updated = $this->location->updateCountry($id, $countryData);
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+        }
+
+        if (! $updated) {
+            return $this->jsonResponse(null, 'Unable to update country', 400);
+        }
+
+        return $this->jsonResponse($updated, 'Country updated successfully');
+    }
+
+    /**
+     * @api             {DELETE}    /country/:id   5. Delete country
+     * @apiDescription  Hard delete a country
+     * @apiGroup        Country
+     *
+     * @param $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        try {
+            $updated = $this->location->deleteCountry($id);
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+        }
+
+        if (! $updated) {
+            return $this->jsonResponse(null, 'Unable to delete country', 400);
+        }
+
+        return $this->jsonResponse($updated, 'Country deleted successfully');
     }
 }

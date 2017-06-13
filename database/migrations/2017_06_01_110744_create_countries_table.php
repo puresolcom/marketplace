@@ -18,6 +18,7 @@ class CreateCountriesTable extends Migration
             $table->string('name', 64);
             $table->string('slug', 64)->unique();
             $table->timestamps();
+            $table->softDeletes();
 
             // Indexes
             $table->index('name');

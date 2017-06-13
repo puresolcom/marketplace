@@ -18,9 +18,94 @@ class ProductController extends Controller
     }
 
     /**
-     * Registers a new product
-     *
-     * @route /product [POST]
+     * @api            {POST}              /product         Create product
+     * @apiDescription Create a new product
+     * @apiGroup       Product
+     * @apiParam       {Object[]}             title          Title translations
+     * @apiParam       {Object[]}             description    Description translations
+     * @apiParam       {Number}               stock          Stock quantity
+     * @apiParam       {String}               upc            UPC code of the product
+     * @apiParam       {String}               sku            SKU code of the product
+     * @apiParam       {Decimal}              price          Price of the product
+     * @apiParam       {Decimal}              discount_price Price to be deducted from origin price as discount
+     * @apiParam       {Number}               currency_id    ID of the base currency for this product
+     * @apiParam       {Number}               store_id       ID of the store to assign this product to
+     * @apiParam       {Number[]}             [categories]   Array of categories IDs for this product
+     * @apiParam       {Number[]}             [tags]         Array of tags IDs for this product
+     * @apiParam       {Object[]}             [attributes]   Array of custom product attributes values and translations
+     * @apiParamExample {json} Request-Example:
+     *{
+     *"title"            :
+     *[
+     *    {
+     *        "locale": "en",
+     *        "value": "Sample Product"
+     *    },
+     *    {
+     *        "locale": "ar",
+     *            "value": "منتج رمزى"
+     *        }
+     *],
+     *"description"    :
+     *    [
+     *        {
+     *            "locale": "en",
+     *            "value": "Sample Description"
+     *        },
+     *        {
+     *            "locale": "ar",
+     *            "value": "وصف رمزى"
+     *        }
+     *    ],
+     *    "stock"            : 10,
+     *    "upc"              : "123456789124",
+     *    "sku"              : "123456789124",
+     *    "price"            : "99.99",
+     *    "discount_price"   : "49.99",
+     *    "currency_id"      : 5,
+     *    "store_id"         : 10,
+     *    "categories"       : [100,200],
+     *    "tags"             : [300,400],
+     *    "attributes"       : {
+     *    "color":
+     *            [
+     *                {
+     *                    "locale"   : "en",
+     *                    "value"    : "red"
+     *                },
+     *                {
+     *                    "locale"   : "ar",
+     *                    "value"    : "احمر"
+     *                }
+     *            ],
+     *        "material":
+     *            [
+     *                {
+     *                    "locale"   : "en",
+     *                    "value"    : "Leather"
+     *                }
+     *            ],
+     *        "size": [1,2]
+     *    }
+     *}
+     * @apiParamExample {json} Value-Based-Attribute-Example:
+     *    "attributes"    :{
+     *                          "color":
+     *                          [
+     *                              {
+     *                                  "locale": "en",
+     *                                  "value" : "red"
+     *                              },
+     *                              {
+     *                                  "locale": "ar",
+     *                                  "value"    : "احمر"
+     *                              }
+     *                          ]
+     *                      }
+     * @apiParamExample {json} Option-Based-Attribute-Example:
+     *    "attributes"    :{
+     *                          "size": [1,2]
+     *                      }
      *
      * @param \Awok\Core\Http\Request $request
      *
@@ -70,9 +155,95 @@ class ProductController extends Controller
     }
 
     /**
-     * Updates a product
-     *
-     * @route /product/{id} [PUT]
+     * @api            {PUT}                 /product/:id   Update product
+     * @apiDescription Update product information
+     * @apiGroup       Product
+     * @apiParam       {Object[]}             [title]          Title translations
+     * @apiParam       {Object[]}             [description]    Description translations
+     * @apiParam       {Number}               [stock]          Stock quantity
+     * @apiParam       {String}               [upc]            UPC code of the product
+     * @apiParam       {String}               [sku]            SKU code of the product
+     * @apiParam       {Decimal}              [price]          Price of the product
+     * @apiParam       {Decimal}              [discount_price] Price to be deducted from origin price as discount
+     * @apiParam       {Number}               [urrency_id]     ID of the base currency for this product
+     * @apiParam       {Number}               [store_id]       ID of the store to assign this product to
+     * @apiParam       {Number[]}             [categories]     Array of categories IDs for this product
+     * @apiParam       {Number[]}             [tags]           Array of tags IDs for this product
+     * @apiParam       {Object[]}             [attributes]     Array of custom product attributes values and
+     *                 translations
+     * @apiParamExample {json} Request-Example:
+     *{
+     *"title"            :
+     *[
+     *    {
+     *        "locale": "en",
+     *        "value": "Sample Product"
+     *    },
+     *    {
+     *        "locale": "ar",
+     *            "value": "منتج رمزى"
+     *        }
+     *],
+     *"description"    :
+     *    [
+     *        {
+     *            "locale": "en",
+     *            "value": "Sample Description"
+     *        },
+     *        {
+     *            "locale": "ar",
+     *            "value": "وصف رمزى"
+     *        }
+     *    ],
+     *    "stock"            : 10,
+     *    "upc"              : "123456789124",
+     *    "sku"              : "123456789124",
+     *    "price"            : "99.99",
+     *    "discount_price"   : "49.99",
+     *    "currency_id"      : 5,
+     *    "store_id"         : 10,
+     *    "categories"       : [100,200],
+     *    "tags"             : [300,400],
+     *    "attributes"       : {
+     *    "color":
+     *            [
+     *                {
+     *                    "locale"   : "en",
+     *                    "value"    : "red"
+     *                },
+     *                {
+     *                    "locale"   : "ar",
+     *                    "value"    : "احمر"
+     *                }
+     *            ],
+     *        "material":
+     *            [
+     *                {
+     *                    "locale"   : "en",
+     *                    "value"    : "Leather"
+     *                }
+     *            ],
+     *        "size": [1,2]
+     *    }
+     *}
+     * @apiParamExample {json} Value-Based-Attribute-Example:
+     *    "attributes"    :{
+     *                          "color":
+     *                          [
+     *                              {
+     *                                  "locale": "en",
+     *                                  "value" : "red"
+     *                              },
+     *                              {
+     *                                  "locale": "ar",
+     *                                  "value"    : "احمر"
+     *                              }
+     *                          ]
+     *                      }
+     * @apiParamExample {json} Option-Based-Attribute-Example:
+     *    "attributes"    :{
+     *                          "size": [1,2]
+     *                      }
      *
      * @param \Awok\Core\Http\Request $request
      * @param                         $id

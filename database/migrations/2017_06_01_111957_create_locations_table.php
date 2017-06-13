@@ -19,14 +19,16 @@ class CreateLocationsTable extends Migration
             $table->string('slug', 64)->unique();
             $table->string('type', 32);
             $table->unsignedInteger('parent_id')->nullable();
-            $table->unsignedSmallInteger('country_id');
+            $table->unsignedSmallInteger('country_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             // Indexes
             $table->index('name');
             $table->index('slug');
 
             // Foreign Keys
+            $table->foreign('parent_id')->references('id')->on('locations')->onUpdate('cascade')->onDelete('restrict');
             $table->foreign('country_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('restrict');
         });
     }

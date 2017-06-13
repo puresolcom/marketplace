@@ -10,7 +10,28 @@ use Psr\Http\Message\ServerRequestInterface;
 class AuthController extends Controller
 {
     /**
-     * @api            {post}  /user/auth/register   Register
+     * @api            {post}     /user/auth/login    1. Login
+     * @apiDescription Log a user into the  system and return OAuth 2 Tokens
+     * @apiGroup       Authentication
+     * @apiParam {String}   username            Username/Email
+     * @apiParam {String}   Password            Password
+     * @apiParamExample {json} Request-Example:
+     * {
+     *  "username" : "awesomeuser@exmaple.com",
+     *  "password" : "p@ssw0rd"
+     * }
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $serverRequest
+     *
+     * @return mixed
+     */
+    public function login(ServerRequestInterface $serverRequest)
+    {
+        return app(AccessTokenController::class)->issueToken($serverRequest);
+    }
+
+    /**
+     * @api            {post}  /user/auth/register   2. Register
      * @apiDescription Registers a new user into the marketplace
      * @apiGroup       Authentication
      * @apiParam {String}   name                First name
@@ -60,26 +81,5 @@ class AuthController extends Controller
         }
 
         return $this->jsonResponse($registerUser, 'User Registered Successfully');
-    }
-
-    /**
-     * @api            {post}     /user/auth/login    Login
-     * @apiDescription Log a user into the  system and return OAuth 2 Tokens
-     * @apiGroup       Authentication
-     * @apiParam {String}   username            Username/Email
-     * @apiParam {String}   Password            Password
-     * @apiParamExample {json} Request-Example:
-     * {
-     *  "username" : "awesomeuser@exmaple.com",
-     *  "password" : "p@ssw0rd"
-     * }
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $serverRequest
-     *
-     * @return mixed
-     */
-    public function login(ServerRequestInterface $serverRequest)
-    {
-        return app(AccessTokenController::class)->issueToken($serverRequest);
     }
 }

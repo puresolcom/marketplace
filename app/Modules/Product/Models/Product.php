@@ -9,6 +9,8 @@ class Product extends Model
 {
     protected $guarded = [];
 
+    protected $dates = ['deleted_at'];
+
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'products_attributes_values', 'product_id', 'attribute_id')

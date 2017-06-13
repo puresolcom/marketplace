@@ -8,16 +8,6 @@ abstract class BaseService
 {
     protected $baseModel;
 
-    protected function getBaseModel()
-    {
-        return $this->baseModel;
-    }
-
-    public function setBaseModel(Model $baseModel)
-    {
-        $this->baseModel = $baseModel;
-    }
-
     /**
      * Query against model
      *
@@ -39,6 +29,16 @@ abstract class BaseService
         $dataKey = null
     ) {
         return $this->getBaseModel()->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
+    }
+
+    protected function getBaseModel()
+    {
+        return $this->baseModel;
+    }
+
+    public function setBaseModel(Model $baseModel)
+    {
+        $this->baseModel = $baseModel;
     }
 
     /**

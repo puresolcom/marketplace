@@ -11,7 +11,7 @@ class CORSMiddleware
             'Access-Control-Allow-Headers' => 'Authorization, Content-type, Access-Control-Allow-Origin',
             'Access-Control-Allow-Origin'  => '*',
         ];
-        
+
         $response = $next($request);
 
         $response->headers->add($headers);

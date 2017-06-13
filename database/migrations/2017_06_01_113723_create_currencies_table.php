@@ -20,6 +20,7 @@ class CreateCurrenciesTable extends Migration
             $table->float('conversion_factor');
             $table->boolean('active');
             $table->timestamps();
+            $table->softDeletes();
 
             // Indexes
             $table->index('name');

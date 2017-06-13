@@ -19,7 +19,7 @@ class TaxonomyController extends Controller
     }
 
     /**
-     * @api            {put}               /taxonomy   Update term
+     * @api            {put}               /taxonomy        Update term
      * @apiDescription Update a current taxonomy term
      * @apiGroup       Taxonomy
      * @apiParam       {String}             [type]          Taxonomy Term Type
@@ -105,7 +105,7 @@ class TaxonomyController extends Controller
     }
 
     /**
-     * @api                     {get}   /taxonomy/:id   Get Taxonomy
+     * @api                     {get}   /taxonomy/:id   Get Term
      * @apiDescription          Finds a specific object using the provided :id segment
      * @apiGroup                Taxonomy
      * @apiParam {String}       [fields]             Comma-separated list of required fields
@@ -128,7 +128,7 @@ class TaxonomyController extends Controller
     }
 
     /**
-     * @api                     {get}   /taxonomy  Taxonomies List
+     * @api                     {get}          /taxonomy            Terms List
      * @apiDescription          Getting paginated objects list
      * @apiGroup                Taxonomy
      * @apiParam {String}       [fields]             Comma-separated list of required fields

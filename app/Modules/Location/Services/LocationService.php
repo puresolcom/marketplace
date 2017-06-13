@@ -74,6 +74,84 @@ class LocationService extends BaseService
      */
     public function createCountry(array $countryData)
     {
-        return $this->getBaseModel()->create($countryData);
+        return Country::create($countryData);
+    }
+
+    /**
+     * Updates a location
+     *
+     * @param       $id
+     * @param array $locationData
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function update($id, array $locationData)
+    {
+        $location = Location::find($id);
+
+        if (! $location) {
+            throw new \Exception('Unable to find location', 400);
+        }
+
+        return $location->update($locationData);
+    }
+
+    /**
+     * Updates a country
+     *
+     * @param       $id
+     * @param array $countryData
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function updateCountry($id, array $countryData)
+    {
+        $country = Country::find($id);
+
+        if (! $country) {
+            throw new \Exception('Unable to find country', 400);
+        }
+
+        return $country->update($countryData);
+    }
+
+    /**
+     * Delete a location
+     *
+     * @param   id
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        $location = Location::find($id);
+
+        if (! $location) {
+            throw new \Exception('Unable to find location', 400);
+        }
+
+        return $location->delete();
+    }
+
+    /**
+     * Delete a country
+     *
+     * @param   id
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function deleteCountry($id)
+    {
+        $country = Country::find($id);
+
+        if (! $country) {
+            throw new \Exception('Unable to find country', 400);
+        }
+
+        return $country->delete();
     }
 }
