@@ -19,6 +19,7 @@ class Attribute extends Model
 
     public function values()
     {
+        dd($this);
         return $this->hasMany(AttributeValue::class, 'attribute_id', 'id')->where('attribute_id', '=', 1);
     }
 

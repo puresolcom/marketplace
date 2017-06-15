@@ -11,6 +11,8 @@ $app->group(['middleware' => 'auth:api'], function () use ($app) {
     $app->delete('/{id}', 'LocationController@delete');
 });
 
-$app->get('/', 'LocationController@list');
+$app->get('country/{id}', 'CountryController@get');
 $app->get('country', 'CountryController@list');
 $app->get('city', 'LocationController@list');
+$app->get('/{id}', 'LocationController@get');
+$app->get('/', 'LocationController@list');
