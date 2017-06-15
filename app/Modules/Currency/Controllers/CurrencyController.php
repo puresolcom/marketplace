@@ -91,7 +91,7 @@ class CurrencyController extends Controller
     public function create(Request $request)
     {
         $expectedFields = ['name', 'symbol', 'conversion_factor'];
-        $currencyData   = $request->only($expectedFields);
+        $currencyData   = array_filter($request->only($expectedFields));
 
         $validator = $this->validate($request, [
             'name'              => 'required',
@@ -134,9 +134,11 @@ class CurrencyController extends Controller
     public function update(Request $request, $id)
     {
         $expectedFields = ['name', 'symbol', 'conversion_factor', 'active'];
-        $currencyData   = $request->only($expectedFields);
+        $currencyData   = array_filter(array_filter($request->only($expectedFields)));
 
         try {
+
+            dd($currencyData);
             $updated = $this->currency->update($id, $currencyData);
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);

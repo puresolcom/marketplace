@@ -38,7 +38,7 @@ class StoreController extends Controller
             'postal_code',
             'user_id',
         ];
-        $storeData      = $request->only($expectedFields);
+        $storeData      = array_filter($request->only($expectedFields));
 
         $validator = $this->validate($request, [
             'name'             => 'required|string',

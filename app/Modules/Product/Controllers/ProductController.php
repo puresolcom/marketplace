@@ -127,7 +127,7 @@ class ProductController extends Controller
             'categories',
             'tags',
         ];
-        $productData    = $request->only($expectedFields);
+        $productData    = array_filter($request->only($expectedFields));
 
         $validator = $this->validate($request, [
             'title'          => 'required',

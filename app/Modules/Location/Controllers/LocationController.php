@@ -97,7 +97,7 @@ class LocationController extends Controller
     public function create(Request $request)
     {
         $expectedFields = ['name', 'slug', 'type', 'parent_id', 'country_id'];
-        $currencyData   = $request->only($expectedFields);
+        $currencyData   = array_filter($request->only($expectedFields));
 
         $validator = $this->validate($request, [
             'name'       => 'required',
@@ -140,7 +140,7 @@ class LocationController extends Controller
     public function update(Request $request, $id)
     {
         $expectedFields = ['name', 'parent_id'];
-        $locationData   = $request->only($expectedFields);
+        $locationData   = array_filter($request->only($expectedFields));
 
         $validator = $this->validate($request, [
             'parent_id' => 'numeric|exists:locations,id',
