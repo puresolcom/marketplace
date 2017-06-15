@@ -11,4 +11,6 @@ class AttributeOptionTranslation extends Model
     protected $guarded = [];
 
     protected $hidden = ['id', 'translatable_id'];
+
+    public $timestamps = false;
 }

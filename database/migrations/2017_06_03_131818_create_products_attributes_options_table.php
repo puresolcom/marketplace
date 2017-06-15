@@ -16,6 +16,7 @@ class CreateProductsAttributesOptionsTable extends Migration
         Schema::create('products_attributes_options', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('attribute_id');
+            $table->string('slug', 64)->unique();
             $table->unsignedInteger('position');
             $table->timestamps();
 

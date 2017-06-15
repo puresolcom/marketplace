@@ -2,7 +2,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/product/attribute",
-    "title": "Attributes List",
+    "title": "2. Attributes List",
     "description": "<p>Getting paginated objects list</p>",
     "group": "Attribute",
     "parameter": {
@@ -54,7 +54,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/product/attribute:id",
-    "title": "Get Attribute",
+    "title": "1. Get Attribute",
     "description": "<p>Finds a specific object using the provided :id segment</p>",
     "group": "Attribute",
     "parameter": {
@@ -81,6 +81,155 @@ define({ "api": [
     "filename": "app/Modules/Product/Controllers/AttributeController.php",
     "groupTitle": "Attribute",
     "name": "GetProductAttributeId"
+  },
+  {
+    "type": "POST",
+    "url": "/attribute",
+    "title": "3. Create attribute",
+    "description": "<p>Create a new attribute</p>",
+    "group": "Attribute",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Name translations</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "slug",
+            "description": "<p>Attribute Slug (Alpha Numeric Dash)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "type",
+            "description": "<p>Attribute Type (string, text, select, checkbox) (String by default)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "multiple",
+            "description": "<p>Multiple values case of type (select,checkbox) (Only when type is in (select, checkbox), false by default)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": true,
+            "field": "options",
+            "description": "<p>Attribute options (Only when multiple is true)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "required",
+            "description": "<p>Attribute Required (false by default)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "position",
+            "description": "<p>Order in front-end</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n\"name\":\n     [\n         {\n             \"locale\": \"en\",\n             \"value\"    : \"Brand\"\n         },\n         {\n             \"locale\": \"ar\",\n             \"value\"    : \"الماركه\"\n         }\n     ],\n\"slug\"        :    \"brand\",\n\"type\"        :    \"string\",\n\"multiple\"    :    false,\n\"required\"    :    true,\n\"position\"    :    1\n}",
+          "type": "json"
+        },
+        {
+          "title": "Request-Example-With-Options:",
+          "content": "{\n\"name\":\n     [\n         {\n             \"locale\": \"en\",\n             \"value\"    : \"Sizes\"\n         },\n         {\n             \"locale\": \"ar\",\n             \"value\"    : \"الأحجام\"\n         }\n     ],\n\"slug\": \"sizes\",\n\"type\": \"select\",\n\"multiple\": true,\n\"options\" :\n         {\n         \"sizes-small\":\n         {\n         \"name\":\n             [\n                 {\n                     \"locale\": \"en\",\n                     \"value\" : \"Small\"\n                 },\n                 {\n                     \"locale\": \"ar\",\n                     \"value\" : \"صغير\"\n                 }\n             ]\n         },\n     \"sizes-large\":\n         {\n             \"name\":\n                 [\n                     {\n                         \"locale\": \"en\",\n                         \"value\" : \"Large\"\n                     },\n                     {\n                         \"locale\": \"ar\",\n                         \"value\" : \"كبير\"\n                     }\n                 ]\n         }\n     },\n\"required\" : true,\n\"position\" : 5\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Modules/Product/Controllers/AttributeController.php",
+    "groupTitle": "Attribute",
+    "name": "PostAttribute"
+  },
+  {
+    "type": "PUT",
+    "url": "/attribute/:id",
+    "title": "3. Update attribute",
+    "description": "<p>Create a new attribute</p>",
+    "group": "Attribute",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": true,
+            "field": "name",
+            "description": "<p>Name translations</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "type",
+            "description": "<p>Attribute Type (string, text, select, checkbox) (String by default)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "multiple",
+            "description": "<p>Multiple values case of type (select,checkbox) (Only when type is in (select, checkbox), false by default)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": true,
+            "field": "options",
+            "description": "<p>Attribute options (Only when multiple is true)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "required",
+            "description": "<p>Attribute Required (false by default)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "position",
+            "description": "<p>Order in front-end</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n\"name\":\n     [\n         {\n             \"locale\": \"en\",\n             \"value\"    : \"Brand\"\n         },\n         {\n             \"locale\": \"ar\",\n             \"value\"    : \"الماركه\"\n         }\n     ],\n\"type\"        :    \"string\",\n\"multiple\"    :    false,\n\"required\"    :    true,\n\"position\"    :    1\n}",
+          "type": "json"
+        },
+        {
+          "title": "Request-Example-With-Options:",
+          "content": "{\n\"name\":\n     [\n         {\n             \"locale\": \"en\",\n             \"value\"    : \"Sizes\"\n         },\n         {\n             \"locale\": \"ar\",\n             \"value\"    : \"الأحجام\"\n         }\n     ],\n\"type\": \"select\",\n\"multiple\": true,\n\"options\" :\n         {\n         \"sizes-small\":\n         {\n         \"name\":\n             [\n                 {\n                     \"locale\": \"en\",\n                     \"value\" : \"Small\"\n                 },\n                 {\n                     \"locale\": \"ar\",\n                     \"value\" : \"صغير\"\n                 }\n             ]\n         },\n     \"sizes-large\":\n         {\n             \"name\":\n                 [\n                     {\n                         \"locale\": \"en\",\n                         \"value\" : \"Large\"\n                     },\n                     {\n                         \"locale\": \"ar\",\n                         \"value\" : \"كبير\"\n                     }\n                 ]\n         }\n     },\n\"required\" : true,\n\"position\" : 5\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Modules/Product/Controllers/AttributeController.php",
+    "groupTitle": "Attribute",
+    "name": "PutAttributeId"
   },
   {
     "type": "post",
@@ -720,7 +869,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/product",
-    "title": "Products List",
+    "title": "2. Products List",
     "description": "<p>Getting paginated objects list</p>",
     "group": "Product",
     "parameter": {
@@ -772,7 +921,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/product/:id",
-    "title": "Get Product",
+    "title": "1. Get Product",
     "description": "<p>Finds a specific object using the provided :id segment</p>",
     "group": "Product",
     "parameter": {
@@ -803,7 +952,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/product",
-    "title": "Create product",
+    "title": "3. Create product",
     "description": "<p>Create a new product</p>",
     "group": "Product",
     "parameter": {
@@ -921,7 +1070,7 @@ define({ "api": [
   {
     "type": "PUT",
     "url": "/product/:id",
-    "title": "Update product",
+    "title": "4. Update product",
     "description": "<p>Update product information</p>",
     "group": "Product",
     "parameter": {
@@ -1120,9 +1269,20 @@ define({ "api": [
     "name": "GetStoreId"
   },
   {
+    "type": "DELETE",
+    "url": "/taxonomy/:id",
+    "title": "5. Delete taxonomy term",
+    "description": "<p>Delete taxonomy term</p>",
+    "group": "Taxonomy",
+    "version": "0.0.0",
+    "filename": "app/Modules/Taxonomy/Controllers/TaxonomyController.php",
+    "groupTitle": "Taxonomy",
+    "name": "DeleteTaxonomyId"
+  },
+  {
     "type": "get",
     "url": "/taxonomy",
-    "title": "Terms List",
+    "title": "2. Terms List",
     "description": "<p>Getting paginated objects list</p>",
     "group": "Taxonomy",
     "parameter": {
@@ -1174,7 +1334,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/taxonomy/:id",
-    "title": "Get Term",
+    "title": "1. Get Term",
     "description": "<p>Finds a specific object using the provided :id segment</p>",
     "group": "Taxonomy",
     "parameter": {
@@ -1205,7 +1365,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/taxonomy",
-    "title": "Create term",
+    "title": "3. Create term",
     "description": "<p>Create a new taxonomy term</p>",
     "group": "Taxonomy",
     "parameter": {
@@ -1257,7 +1417,7 @@ define({ "api": [
   {
     "type": "put",
     "url": "/taxonomy",
-    "title": "Update term",
+    "title": "4. Update term",
     "description": "<p>Update a current taxonomy term</p>",
     "group": "Taxonomy",
     "parameter": {

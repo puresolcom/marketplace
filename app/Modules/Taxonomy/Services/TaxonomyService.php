@@ -69,7 +69,11 @@ class TaxonomyService extends BaseService
         $name     = $args['name'] ?? $term;
         $slug     = isset($args['slug']) ? str_slug($args['slug']) : (is_string($name) ? str_slug($name) : null);
 
-        $this->termPrechecks($type, $slug, $parentID);
+        if (! $slug) {
+            throw new \Exception('Could not detect a slug');
+        }
+
+        $this->termPrechecks($type, $parentID);
 
         $slugExists = $this->termSlugExists($slug);
 
@@ -104,20 +108,16 @@ class TaxonomyService extends BaseService
 
     /**
      * @param $type
-     * @param $slug
      * @param $parentID
      *
      * @throws \Exception
      */
-    protected function termPrechecks($type, $slug, $parentID)
+    protected function termPrechecks($type, $parentID)
     {
         if (! $this->validTaxonomyType($type)) {
             throw new \Exception('Invalid term type/taxonomy');
         }
 
-        if (! $slug) {
-            throw new \Exception('Could not detect a slug');
-        }
         try {
             $this->parentTermMatches($parentID, $type);
         } catch (\Exception $e) {
@@ -331,6 +331,29 @@ class TaxonomyService extends BaseService
     public function setProductTags(Product $product, $tags)
     {
         return $this->setProductTaxonomyTerms($product, $tags, 'tag');
+    }
+
+    /**
+     * Deletes A term
+     *
+     * @param $id
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function deleteTerm($id)
+    {
+        $term = $this->getBaseModel()->find($id);
+
+        if (! $term) {
+            throw new \Exception('Unable to find term', 400);
+        }
+
+        if ($term->products()->count() > 0) {
+            throw new \Exception('Term has attached objects and cannot be deleted', 400);
+        }
+
+        return $term->delete();
     }
 
     public function syncWithBitrix()

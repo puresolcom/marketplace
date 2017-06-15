@@ -18,7 +18,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @api            {POST}              /product         Create product
+     * @api            {POST}              /product         3. Create product
      * @apiDescription Create a new product
      * @apiGroup       Product
      * @apiParam       {Object[]}             title          Title translations
@@ -155,7 +155,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @api            {PUT}                 /product/:id   Update product
+     * @api            {PUT}                 /product/:id   4. Update product
      * @apiDescription Update product information
      * @apiGroup       Product
      * @apiParam       {Object[]}             [title]          Title translations
@@ -262,7 +262,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @api                     {get}   /product/:id   Get Product
+     * @api                     {get}   /product/:id   1. Get Product
      * @apiDescription          Finds a specific object using the provided :id segment
      * @apiGroup                Product
      * @apiParam {String}       [fields]             Comma-separated list of required fields
@@ -285,7 +285,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @api                     {get}   /product  Products List
+     * @api                     {get}   /product  2. Products List
      * @apiDescription          Getting paginated objects list
      * @apiGroup                Product
      * @apiParam {String}       [fields]             Comma-separated list of required fields

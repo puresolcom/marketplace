@@ -17,7 +17,7 @@ class CreateProductsAttributesTable extends Migration
             $table->increments('id');
             $table->string('slug', 64)->unique();
             $table->string('type', 255);
-            $table->string('data_type', 32);
+            $table->boolean('multiple');
             $table->text('configuration')->nullable();
             $table->boolean('required')->nullable();
             $table->unsignedInteger('position');

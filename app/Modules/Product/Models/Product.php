@@ -4,9 +4,12 @@ namespace Awok\Modules\Product\Models;
 
 use Awok\Core\Eloquent\Model;
 use Awok\Modules\Taxonomy\Models\Taxonomy;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
 
     protected $dates = ['deleted_at'];
