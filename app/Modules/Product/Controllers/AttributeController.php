@@ -35,7 +35,7 @@ class AttributeController extends Controller
         try {
             $result = $this->attributeService->get($id, $request->getFields(), $request->getRelations());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Attribute not found', 400);
@@ -60,7 +60,7 @@ class AttributeController extends Controller
         try {
             $result = $this->attributeService->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return $this->jsonResponse($result);
@@ -175,7 +175,7 @@ class AttributeController extends Controller
         try {
             $result = $this->attributeService->create($attributeData);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return $this->jsonResponse($result, 'Attribute added successfully');
@@ -287,7 +287,7 @@ class AttributeController extends Controller
         try {
             $this->attributeService->update($id, $attributeData);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return $this->jsonResponse(null, 'Attribute Updated successfully');

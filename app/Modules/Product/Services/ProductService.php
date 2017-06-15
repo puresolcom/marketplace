@@ -325,4 +325,31 @@ class ProductService extends BaseService
     {
         return ($delete = $this->getBaseModel()->find($id)) ? $delete->delete() : false;
     }
+
+    /**
+     * Gets array of product attributes and values
+     *
+     * @param $productID
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getProductAttributes($productID)
+    {
+        if (! ($product = Product::find($productID))) {
+            throw new \Exception('Product could not be found');
+        }
+
+        $attributes = $product->attributes;
+
+        $result = [];
+
+        foreach ($attributes as $attribute) {
+            $result[$attribute->slug]                 = $attribute->toArray();
+            $result[$attribute->slug]['translations'] = $attribute->translations;
+            $result[$attribute->slug]['values']       = $attribute->values()->where('product_id', '=', $productID)->with('translations')->get()->toArray();
+        }
+
+        return $result;
+    }
 }

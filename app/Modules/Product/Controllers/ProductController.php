@@ -148,7 +148,7 @@ class ProductController extends Controller
         try {
             $this->productService->create($productData);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return $this->jsonResponse(null, 'Product added successfully');
@@ -255,7 +255,7 @@ class ProductController extends Controller
         try {
             $this->productService->update($id, $request->all());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return $this->jsonResponse(null, 'Product updated successfully');
@@ -278,7 +278,7 @@ class ProductController extends Controller
         try {
             $result = $this->productService->get($id, $request->getFields(), $request->getRelations());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Product not found', 400);
@@ -303,7 +303,27 @@ class ProductController extends Controller
         try {
             $result = $this->productService->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
+        }
+
+        return $this->jsonResponse($result);
+    }
+
+    /**
+     * @api                     {get}   /product/:id/attributes 5. Get Product Attributes
+     * @apiDescription          Listing product attributes along with their values
+     * @apiGroup                Product
+     *
+     * @param $productID
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getProductAttributes($productID)
+    {
+        try {
+            $result = $this->productService->getProductAttributes($productID);
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return $this->jsonResponse($result);

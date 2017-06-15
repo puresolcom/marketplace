@@ -8,7 +8,7 @@ class Attribute extends Model
 {
     protected $table = 'products_attributes';
 
-    protected $guarded = ['values'];
+    protected $guarded = [];
 
     protected $hidden = ['pivot', 'created_at', 'updated_at'];
 
@@ -19,8 +19,7 @@ class Attribute extends Model
 
     public function values()
     {
-        dd($this);
-        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id')->where('attribute_id', '=', 1);
+        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id');
     }
 
     public function options()

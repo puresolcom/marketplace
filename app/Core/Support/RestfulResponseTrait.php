@@ -2,6 +2,7 @@
 
 namespace Awok\Core\Support;
 
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Http\Response;
 
 trait RestfulResponseTrait
@@ -12,6 +13,9 @@ trait RestfulResponseTrait
         $status = 200,
         $errors = []
     ) {
+
+        $message = $this->handleMessage($message);
+
         $formattedContent = [
             'api'    => [
                 'format' => 'json',
@@ -27,6 +31,18 @@ trait RestfulResponseTrait
         ];
 
         return $this->response($formattedContent, 200, 'application/json');
+    }
+
+    protected function handleMessage($message)
+    {
+        if ($message instanceof RelationNotFoundException) {
+            preg_match('/\[[a-zA-Z ]+\]/', $message->getMessage(), $relation);
+            $message = "Relation {$relation[0]} is not a valid relation";
+        } elseif ($message instanceof \Exception) {
+            $message = $message->getMessage();
+        }
+
+        return $message;
     }
 
     protected function response(

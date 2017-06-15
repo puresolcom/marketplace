@@ -35,7 +35,7 @@ class TaxonomyController extends Controller
         try {
             $result = $this->taxonomyService->get($id, $request->getFields(), $request->getRelations());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Product not found', 400);
@@ -60,7 +60,7 @@ class TaxonomyController extends Controller
         try {
             $result = $this->taxonomyService->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return $this->jsonResponse($result);
@@ -102,7 +102,7 @@ class TaxonomyController extends Controller
         try {
             $this->taxonomyService->createTerm($request->get('name'), $request->except('name'));
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return $this->jsonResponse(null, 'Taxonomy term created successfully');
@@ -146,7 +146,7 @@ class TaxonomyController extends Controller
         try {
             $this->taxonomyService->updateTerm($id, $request->all());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return $this->jsonResponse(null, 'Taxonomy term updated successfully');
@@ -166,7 +166,7 @@ class TaxonomyController extends Controller
         try {
             $deleted = $this->taxonomyService->deleteTerm($id);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         if (! $deleted) {
@@ -181,7 +181,7 @@ class TaxonomyController extends Controller
         try {
             $this->taxonomyService->syncWithBitrix();
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), 400);
+            return $this->jsonResponse(null, $e, 400);
         }
 
         return $this->jsonResponse(null, 'Taxonomies Synced successfully');

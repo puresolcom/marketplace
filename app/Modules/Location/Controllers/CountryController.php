@@ -39,7 +39,7 @@ class CountryController extends Controller
         try {
             $result = $this->location->getCountry($id, $request->getFields(), $request->getRelations());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Object not found', 400);
@@ -64,7 +64,7 @@ class CountryController extends Controller
         try {
             $result = $this->location->fetchCountries($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return $this->jsonResponse($result);
@@ -132,7 +132,7 @@ class CountryController extends Controller
         try {
             $updated = $this->location->updateCountry($id, $countryData);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         if (! $updated) {
@@ -156,7 +156,7 @@ class CountryController extends Controller
         try {
             $updated = $this->location->deleteCountry($id);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         if (! $updated) {

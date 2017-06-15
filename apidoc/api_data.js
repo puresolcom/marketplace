@@ -950,6 +950,17 @@ define({ "api": [
     "name": "GetProductId"
   },
   {
+    "type": "get",
+    "url": "/product/:id/attributes",
+    "title": "5. Get Product Attributes",
+    "description": "<p>Listing product attributes along with their values</p>",
+    "group": "Product",
+    "version": "0.0.0",
+    "filename": "app/Modules/Product/Controllers/ProductController.php",
+    "groupTitle": "Product",
+    "name": "GetProductIdAttributes"
+  },
+  {
     "type": "POST",
     "url": "/product",
     "title": "3. Create product",

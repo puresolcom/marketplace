@@ -79,7 +79,7 @@ class StoreController extends Controller
         try {
             $result = $this->storeService->get($id, $request->getFields(), $request->getRelations());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Store not found', 400);
@@ -104,7 +104,7 @@ class StoreController extends Controller
         try {
             $result = $this->storeService->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return $this->jsonResponse($result);

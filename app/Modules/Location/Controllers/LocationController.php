@@ -41,7 +41,7 @@ class LocationController extends Controller
         try {
             $result = $this->location->get($id, $request->getFields(), $request->getRelations());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return ($result) ? $this->jsonResponse($result) : $this->jsonResponse(null, 'Object not found', 400);
@@ -66,7 +66,7 @@ class LocationController extends Controller
         try {
             $result = $this->location->fetch($request->getFields(), $request->getFilters(), $request->getSort(), $request->getRelations(), $request->getPerPage());
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         return $this->jsonResponse($result);
@@ -153,7 +153,7 @@ class LocationController extends Controller
         try {
             $updated = $this->location->update($id, $locationData);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         if (! $updated) {
@@ -177,7 +177,7 @@ class LocationController extends Controller
         try {
             $updated = $this->location->delete($id);
         } catch (\Exception $e) {
-            return $this->jsonResponse(null, $e->getMessage(), $e->getCode() ?? 400);
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
 
         if (! $updated) {

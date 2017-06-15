@@ -18,4 +18,9 @@ class AttributeValue extends Model
     {
         return $this->hasMany(AttributeValueTranslation::class, 'translatable_id');
     }
+
+    public function attribute()
+    {
+        return $this->hasOne(Attribute::class, 'id', 'attribute_id');
+    }
 }
