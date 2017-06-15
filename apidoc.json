@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Awok Marketplace Microservice",
   "title": "Awok Marketplace",
-  "url": "http://192.168.1.97/market/public",
+  "url": "http://192.168.1.231/market/public",
   "header": {
     "title": "Introduction",
     "filename": "header.md"

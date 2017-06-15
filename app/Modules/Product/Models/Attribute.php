@@ -10,7 +10,7 @@ class Attribute extends Model
 
     protected $guarded = ['values'];
 
-    protected $hidden = ['pivot', 'created_at', 'updated_at', 'values'];
+    protected $hidden = ['pivot', 'created_at', 'updated_at'];
 
     public static function findBySlug($slug)
     {
@@ -19,7 +19,7 @@ class Attribute extends Model
 
     public function values()
     {
-        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id');
+        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id')->where('attribute_id', '=', 1);
     }
 
     public function options()
