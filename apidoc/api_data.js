@@ -330,14 +330,14 @@ define({ "api": [
   },
   {
     "type": "DELETE",
-    "url": "/country/:id",
+    "url": "/location/country/:id",
     "title": "5. Delete country",
     "description": "<p>Hard delete a country</p>",
     "group": "Country",
     "version": "0.0.0",
     "filename": "app/Modules/Location/Controllers/CountryController.php",
     "groupTitle": "Country",
-    "name": "DeleteCountryId"
+    "name": "DeleteLocationCountryId"
   },
   {
     "type": "get",
@@ -462,7 +462,7 @@ define({ "api": [
   },
   {
     "type": "PUT",
-    "url": "/country/:id",
+    "url": "/location/country/:id",
     "title": "4. Update country",
     "description": "<p>Update country information</p>",
     "group": "Country",
@@ -489,7 +489,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "app/Modules/Location/Controllers/CountryController.php",
     "groupTitle": "Country",
-    "name": "PutCountryId"
+    "name": "PutLocationCountryId"
   },
   {
     "type": "DELETE",
