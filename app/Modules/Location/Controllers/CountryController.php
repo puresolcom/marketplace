@@ -110,7 +110,7 @@ class CountryController extends Controller
     }
 
     /**
-     * @api            {PUT}                 /country/:id            4. Update country
+     * @api            {PUT}                 /location/country/:id            4. Update country
      * @apiDescription Update country information
      * @apiGroup       Country
      * @apiParam       {String}             [name]                    Name of the country
@@ -143,7 +143,7 @@ class CountryController extends Controller
     }
 
     /**
-     * @api             {DELETE}    /country/:id   5. Delete country
+     * @api             {DELETE}    /location/country/:id   5. Delete country
      * @apiDescription  Hard delete a country
      * @apiGroup        Country
      *
