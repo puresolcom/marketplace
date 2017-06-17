@@ -14,6 +14,19 @@ class Product extends Model
 
     protected $dates = ['deleted_at'];
 
+    //protected $appends = ['attributes'];
+    //
+    //public function getAttributesAttribute()
+    //{
+    //    return $this->attributes()->with([
+    //        'translations',
+    //        'values' => function ($q) {
+    //            $q->where('product_id', '=', $this->getKey());
+    //        },
+    //        'values.translations',
+    //    ])->get();
+    //}
+
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'products_attributes_values', 'product_id', 'attribute_id')
@@ -23,7 +36,7 @@ class Product extends Model
 
     public function attributesValues()
     {
-        return $this->hasMany(AttributeValue::class, 'product_id');
+        return $this->hasMany(AttributeValue::class, 'product_id', 'id');
     }
 
     public function categories()

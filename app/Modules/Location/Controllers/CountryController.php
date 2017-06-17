@@ -89,7 +89,7 @@ class CountryController extends Controller
     public function create(Request $request)
     {
         $expectedFields = ['name', 'slug'];
-        $currencyData   = array_filter($request->only($expectedFields));
+        $currencyData   = $request->expected($expectedFields);
 
         $validator = $this->validate($request, [
             'name' => 'required',
@@ -127,7 +127,7 @@ class CountryController extends Controller
     public function update(Request $request, $id)
     {
         $expectedFields = ['name'];
-        $countryData    = array_filter($request->only($expectedFields));
+        $countryData    = $request->expected($expectedFields);
 
         try {
             $updated = $this->location->updateCountry($id, $countryData);

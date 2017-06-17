@@ -156,7 +156,7 @@ class AttributeController extends Controller
     public function create(Request $request)
     {
         $expectedFields = ['name', 'slug', 'type', 'multiple', 'options', 'required', 'position'];
-        $attributeData  = array_filter($request->only($expectedFields));
+        $attributeData  = $request->expected($expectedFields);
 
         $validator = $this->validate($request, [
             'name'     => 'required',
@@ -270,7 +270,7 @@ class AttributeController extends Controller
     public function update(Request $request, $id)
     {
         $expectedFields = ['name', 'type', 'multiple', 'options', 'required', 'position'];
-        $attributeData  = array_filter($request->only($expectedFields));
+        $attributeData  = $request->expected($expectedFields);
 
         $validator = $this->validate($request, [
             'type'     => [Rule::in(['string', 'text', 'select', 'checkbox'])],

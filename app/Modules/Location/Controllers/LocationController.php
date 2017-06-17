@@ -97,14 +97,14 @@ class LocationController extends Controller
     public function create(Request $request)
     {
         $expectedFields = ['name', 'slug', 'type', 'parent_id', 'country_id'];
-        $currencyData   = array_filter($request->only($expectedFields));
+        $currencyData   = $request->expected($expectedFields);
 
         $validator = $this->validate($request, [
             'name'       => 'required',
             'slug'       => 'required|alpha_dash|unique:locations',
             'type'       => ['required', Rule::in(['city', 'area'])],
-            'parent_id'  => 'numeric|exists:locations,id',
-            'country_id' => 'required_if:type,city|numeric|exists:countries,id',
+            'parent_id'  => 'nullable|numeric|exists:locations,id',
+            'country_id' => 'nullable|required_if:type,city|numeric|exists:countries,id',
         ]);
 
         if ($validator->fails()) {
@@ -140,10 +140,11 @@ class LocationController extends Controller
     public function update(Request $request, $id)
     {
         $expectedFields = ['name', 'parent_id'];
-        $locationData   = array_filter($request->only($expectedFields));
+        $locationData   = $request->expected($expectedFields);
 
         $validator = $this->validate($request, [
-            'parent_id' => 'numeric|exists:locations,id',
+            'country_id' => 'nullable|numeric|exists:countries,id',
+            'parent_id'  => 'nullable|numeric|exists:locations,id',
         ]);
 
         if ($validator->fails()) {

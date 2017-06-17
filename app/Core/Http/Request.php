@@ -7,6 +7,29 @@ class Request extends \Illuminate\Http\Request
     protected $comparisonSymbols = [':', '=', '<', '>', '<=', '>=', '!='];
 
     /**
+     * Intersect an array of items with the input data (EMPTY VALUES INCLUDED).
+     *
+     * @param  array|mixed $keys
+     *
+     * @return array
+     */
+    public function expected($keys)
+    {
+        $all  = $this->request->all();
+        $only = $this->only(is_array($keys) ? $keys : func_get_args());
+
+        $results = [];
+
+        foreach ($only as $k => $v) {
+            if (array_key_exists($k, $all)) {
+                $results[$k] = $v;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * Get Request Fields
      *
      * @return array|null
