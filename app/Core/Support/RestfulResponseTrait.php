@@ -21,12 +21,12 @@ trait RestfulResponseTrait
                 'format' => 'json',
             ],
             'status' => [
-                'code'    => $status,
-                'message' => $message,
+                'code' => $status,
             ],
             'output' => [
-                'data'   => $content,
-                'errors' => $errors,
+                'data'    => $content,
+                'message' => $message,
+                'errors'  => $errors,
             ],
         ];
 

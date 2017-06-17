@@ -10,11 +10,11 @@ use Psr\Http\Message\ServerRequestInterface;
 class AuthController extends Controller
 {
     /**
-     * @api            {post}     /user/auth/login    1. Login
-     * @apiDescription Log a user into the  system and return OAuth 2 Tokens
-     * @apiGroup       Authentication
-     * @apiParam {String}   username            Username/Email
-     * @apiParam {String}   Password            Password
+     * @api             {post}     /user/auth/login    1. Login
+     * @apiDescription  Log a user into the  system and return OAuth 2 Tokens
+     * @apiGroup        Authentication
+     * @apiParam        {String}   username            Username/Email
+     * @apiParam        {String}   Password            Password
      * @apiParamExample {json} Request-Example:
      * {
      *  "username" : "awesomeuser@exmaple.com",
@@ -27,18 +27,26 @@ class AuthController extends Controller
      */
     public function login(ServerRequestInterface $serverRequest)
     {
+        $serverRequestBody = $serverRequest->getParsedBody();
+        $serverRequestBody = array_merge([
+            'grant_type'    => 'password',
+            'client_id'     => 1,
+            'client_secret' => 'JrVZiqKDo5KoFAAotmvq39ni1I1XUzbwLwFy6qsH',
+        ], $serverRequestBody);
+        $serverRequest     = $serverRequest->withParsedBody($serverRequestBody);
+
         return app(AccessTokenController::class)->issueToken($serverRequest);
     }
 
     /**
-     * @api            {post}  /user/auth/register   2. Register
-     * @apiDescription Registers a new user into the marketplace
-     * @apiGroup       Authentication
-     * @apiParam {String}   name                First name
-     * @apiParam {String}   email               E-mail Address
-     * @apiParam {String}   phone_primary       Primary Phone number
-     * @apiParam {String}   [phone_secondary]   Secondary Phone number
-     * @apiParam {String}   password            Password
+     * @api             {post}  /user/auth/register   2. Register
+     * @apiDescription  Registers a new user into the marketplace
+     * @apiGroup        Authentication
+     * @apiParam        {String}   name                First name
+     * @apiParam        {String}   email               E-mail Address
+     * @apiParam        {String}   phone_primary       Primary Phone number
+     * @apiParam        {String}   [phone_secondary]   Secondary Phone number
+     * @apiParam        {String}   password            Password
      * @apiParamExample {json} Request-Example:
      * {
      *  "name" : "Mohammed Anwar",
