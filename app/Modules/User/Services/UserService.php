@@ -3,7 +3,10 @@
 namespace Awok\Modules\User\Services;
 
 use Awok\Core\Foundation\BaseService;
+use Awok\Modules\Option\Services\OptionService;
 use Awok\Modules\User\Models\User;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class UserService
@@ -12,9 +15,58 @@ use Awok\Modules\User\Models\User;
  */
 class UserService extends BaseService
 {
-    public function __construct(User $user)
+    /**
+     * @var OptionService;
+     */
+    protected $option;
+
+    public function __construct()
     {
-        $this->setBaseModel($user);
+        $this->setBaseModel(User::class);
+        $this->option = app('option');
+    }
+
+    /**
+     * @param array $loginCredentials
+     *
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \Exception, ClientException
+     */
+    public function login(array $loginCredentials)
+    {
+        $user = $this->findWhere(['email' => $loginCredentials['username']], ['id', 'email', 'password'])->first();
+        if (! $user || ! app('hash')->check($loginCredentials['password'], $user->password)) {
+            throw new \Exception('Invalid Login Credentials', 400);
+        }
+
+        $kongMasterURL = $this->option->get('global', 'api_url');
+        if (! $kongMasterURL) {
+            throw new \Exception('Unable to detect API Gateway URL', 400);
+        }
+
+        $clientID          = $this->option->get('auth', 'oauth_client_id');
+        $clientSecret      = $this->option->get('auth', 'oauth_client_secret');
+        $oauthProvisionKey = $this->option->get('auth', 'oauth_provision_key');
+
+        $http = new Client();
+
+        /**
+         * @throws ClientException
+         */
+        $response = $http->request('POST', $kongMasterURL.'/oauth2/token', [
+            'verify'      => false,
+            'form_params' => [
+                'client_id'            => $clientID,
+                'client_secret'        => $clientSecret,
+                'provision_key'        => $oauthProvisionKey,
+                'grant_type'           => 'password',
+                'authenticated_userid' => $user->id,
+                'username'             => $loginCredentials['username'] ?? null,
+                "password"             => $loginCredentials['password'] ?? null,
+            ],
+        ]);
+
+        return $response;
     }
 
     /**

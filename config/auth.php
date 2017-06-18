@@ -36,7 +36,7 @@ return [
     */
 
     'guards'        => [
-        'api' => ['driver' => 'passport', 'provider' => 'users'],
+        'api' => ['driver' => 'api', 'provider' => 'users'],
     ],
 
     /*
@@ -45,7 +45,7 @@ return [
     |--------------------------------------------------------------------------
      */
     'authorization' => [
-        'user_role_relation_name' => 'groups',
+        'user_role_relation_name' => 'roles',
     ],
 
     /*

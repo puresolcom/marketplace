@@ -16,9 +16,9 @@ class ProductService extends BaseService
      */
     protected $taxonomy;
 
-    public function __construct(Product $product)
+    public function __construct()
     {
-        $this->setBaseModel($product);
+        $this->setBaseModel(Product::class);
         $this->taxonomy = app('taxonomy');
     }
 

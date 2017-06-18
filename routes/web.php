@@ -10,7 +10,6 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-Dusterio\LumenPassport\LumenPassport::routes($app);
 
 $app->get('/', function () use ($app) {
     return $app->version();

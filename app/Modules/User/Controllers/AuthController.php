@@ -4,11 +4,21 @@ namespace Awok\Modules\User\Controllers;
 
 use Awok\Core\Http\Request;
 use Awok\Http\Controllers\Controller;
-use Dusterio\LumenPassport\Http\Controllers\AccessTokenController;
-use Psr\Http\Message\ServerRequestInterface;
+use Awok\Modules\User\Services\UserService;
+use GuzzleHttp\Exception\ClientException;
 
 class AuthController extends Controller
 {
+    /**
+     * @var UserService
+     */
+    protected $user;
+
+    public function __construct()
+    {
+        $this->user = app('user');
+    }
+
     /**
      * @api             {post}     /user/auth/login    1. Login
      * @apiDescription  Log a user into the  system and return OAuth 2 Tokens
@@ -21,21 +31,35 @@ class AuthController extends Controller
      *  "password" : "p@ssw0rd"
      * }
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $serverRequest
+     * @param Request $request ;
      *
      * @return mixed
      */
-    public function login(ServerRequestInterface $serverRequest)
+    public function login(Request $request)
     {
-        $serverRequestBody = $serverRequest->getParsedBody();
-        $serverRequestBody = array_merge([
-            'grant_type'    => 'password',
-            'client_id'     => 1,
-            'client_secret' => 'JrVZiqKDo5KoFAAotmvq39ni1I1XUzbwLwFy6qsH',
-        ], $serverRequestBody);
-        $serverRequest     = $serverRequest->withParsedBody($serverRequestBody);
+        $loginFields      = ['username', 'password'];
+        $loginCredentials = $request->only($loginFields);
 
-        return app(AccessTokenController::class)->issueToken($serverRequest);
+        $validator = $this->validate($request, [
+            'username' => 'required',
+            'password' => 'required|min:6|max:32',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->jsonResponse(null, 'Error while validating your input', 400, $validator->getMessageBag()->all());
+        }
+
+        try {
+            $response = $this->user->login($loginCredentials);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+
+            return $this->jsonResponse($response->getBody()->getContents(), $response->getReasonPhrase(), $response->getStatusCode(), $e->getMessage());
+        } catch (\Exception $e) {
+            return $this->jsonResponse($e->getMessage(), 400);
+        }
+
+        return $this->response($response->getBody()->getContents(), $response->getStatusCode());
     }
 
     /**
@@ -83,7 +107,7 @@ class AuthController extends Controller
         }
 
         try {
-            $registerUser = app('user')->register($registrationData);
+            $registerUser = $this->user->register($registrationData);
         } catch (\Exception $e) {
             return $this->jsonResponse('', $e->getMessage(), 400);
         }

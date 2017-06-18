@@ -5,9 +5,9 @@ namespace Awok\Core\Authorization\Exceptions;
 class UnauthorizedAccess extends \Exception
 {
     public function __construct(
-        $message = 'You don\'t have enough permission to access this resource',
+        $message = 'You don\'t have enought permission to access this resource',
         $code = 0,
-        \Exception $previous = null
+        Exception $previous = null
     ) {
         parent::__construct($message, $code, $previous);
     }

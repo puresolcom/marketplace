@@ -18,10 +18,10 @@ class TaxonomyService extends BaseService
 
     protected $taxonomies = [];
 
-    public function __construct(Taxonomy $taxonomyModel)
+    public function __construct()
     {
         $this->option = app('option');
-        $this->setBaseModel($taxonomyModel);
+        $this->setBaseModel(Taxonomy::class);
         $this->registerDefaultTaxonomies();
     }
 

@@ -19,7 +19,7 @@ trait UserTrait
         if (is_array($name)) {
             return $this->checkMultipleRoles($name, $requireAll);
         } else {
-            if (in_array($name, array_column($this->getRoles()->toArray(), 'name'))) {
+            if (in_array($name, array_column($this->getRoles()->toArray(), 'role'))) {
                 return true;
             }
         }
@@ -57,7 +57,7 @@ trait UserTrait
      */
     public function getRoles()
     {
-        return $this->{config('auth.authorization.user_role_relation_name', 'roles')};
+        return $this->{config('auth.authorization.user_role_relation_name')};
     }
 
     /**

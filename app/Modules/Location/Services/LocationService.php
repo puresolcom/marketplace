@@ -12,9 +12,9 @@ class LocationService extends BaseService
      */
     protected $countryModel;
 
-    public function __construct(Location $location, Country $country)
+    public function __construct(Country $country)
     {
-        $this->setBaseModel($location);
+        $this->setBaseModel(Location::class);
         $this->countryModel = $country;
     }
 

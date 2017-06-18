@@ -2,6 +2,7 @@
 
 namespace Awok\Modules\User\Models;
 
+use Awok\Core\Authorization\Traits\UserTrait;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -9,7 +10,7 @@ use Laravel\Lumen\Auth\Authorizable;
 
 class User extends \Awok\Core\Eloquent\Model implements AuthenticatableContract, AuthorizableContract
 {
-    use \Laravel\Passport\HasApiTokens, Authenticatable, Authorizable;
+    use UserTrait, Authenticatable, Authorizable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,4 +27,9 @@ class User extends \Awok\Core\Eloquent\Model implements AuthenticatableContract,
     protected $hidden = [
         'password',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'users_roles', 'user_id', 'role_id');
+    }
 }

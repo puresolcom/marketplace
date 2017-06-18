@@ -6,9 +6,9 @@ use Awok\Modules\Store\Models\Store;
 
 class StoreService extends BaseService
 {
-    public function __construct(Store $store)
+    public function __construct()
     {
-        $this->setBaseModel($store);
+        $this->setBaseModel(Store::class);
     }
 
     /**

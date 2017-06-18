@@ -6,9 +6,9 @@ use Awok\Modules\Currency\Models\Currency;
 
 class CurrencyService extends BaseService
 {
-    public function __construct(Currency $currency)
+    public function __construct()
     {
-        $this->setBaseModel($currency);
+        $this->setBaseModel(Currency::class);
     }
 
     /**

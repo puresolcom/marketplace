@@ -9,9 +9,9 @@ use Awok\Modules\Product\Models\AttributeOption;
 
 class AttributeService extends BaseService
 {
-    public function __construct(Attribute $attribute)
+    public function __construct()
     {
-        $this->setBaseModel($attribute);
+        $this->setBaseModel(Attribute::class);
     }
 
     /**

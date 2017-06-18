@@ -8,6 +8,8 @@ abstract class BaseService
 {
     protected $baseModel;
 
+    protected $baseModelFQN;
+
     /**
      * Query against model
      *
@@ -28,7 +30,10 @@ abstract class BaseService
         $limit = null,
         $dataKey = null
     ) {
-        return $this->getBaseModel()->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
+        $result = $this->getBaseModel()->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
+        $this->resetModel();
+
+        return $result;
     }
 
     protected function getBaseModel()
@@ -36,9 +41,10 @@ abstract class BaseService
         return $this->baseModel;
     }
 
-    public function setBaseModel(Model $baseModel)
+    public function setBaseModel($baseModelFQN)
     {
-        $this->baseModel = $baseModel;
+        $this->baseModelFQN = $baseModelFQN;
+        $this->baseModel    = app($baseModelFQN);
     }
 
     /**
@@ -50,6 +56,54 @@ abstract class BaseService
      */
     public function get($id, $fields, $relations)
     {
-        return $this->getBaseModel()->restQueryBuilder($fields, [['id' => $id]], null, $relations, null, null, false)->first();
+        $result = $this->getBaseModel()->restQueryBuilder($fields, [['id' => $id]], null, $relations, null, null, false)->first();
+        $this->resetModel();
+
+        return $result;
+    }
+
+    public function findWhere(array $where, $columns = ['*'])
+    {
+        $this->applyConditions($where);
+
+        $model = $this->getBaseModel()->get($columns);
+        $this->resetModel();
+
+        return $model;
+    }
+
+    /**
+     * Applies the given where conditions to the model.
+     *
+     * @param array $where
+     *
+     * @return void
+     */
+    protected function applyConditions(array $where)
+    {
+        foreach ($where as $field => $value) {
+            if (is_array($value)) {
+                list($field, $condition, $val) = $value;
+                $this->baseModel = $this->baseModel->where($field, $condition, $val);
+            } else {
+                $this->baseModel = $this->baseModel->where($field, '=', $value);
+            }
+        }
+    }
+
+    public function makeModel()
+    {
+        $model = app($this->baseModelFQN);
+
+        if (! $model instanceof Model) {
+            throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+        }
+
+        return $this->baseModel = $model;
+    }
+
+    public function resetModel()
+    {
+        $this->makeModel();
     }
 }

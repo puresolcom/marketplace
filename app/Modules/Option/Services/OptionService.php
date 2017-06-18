@@ -7,9 +7,9 @@ use Awok\Modules\Option\Models\Option;
 
 class OptionService extends BaseService
 {
-    public function __construct(Option $option)
+    public function __construct()
     {
-        $this->setBaseModel($option);
+        $this->setBaseModel(Option::class);
     }
 
     /**

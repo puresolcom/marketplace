@@ -51,12 +51,9 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, Awok\Console\Kernel:
 |
 */
 
-$app->middleware([
-    \Awok\Core\Http\Middleware\CORSMiddleware::class,
-]);
-
 $app->routeMiddleware([
     'auth' => Awok\Http\Middleware\Authenticate::class,
+    'role' => Awok\Core\Authorization\Middleware\RoleMiddleware::class,
 ]);
 
 /*
@@ -69,12 +66,9 @@ $app->routeMiddleware([
 | totally optional, so you are not required to uncomment this line.
 |
 */
-
-$app->register(Laravel\Passport\PassportServiceProvider::class);
-$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Awok\Providers\AppServiceProvider::class);
 $app->register(Awok\Providers\AuthServiceProvider::class);
-$app->register(Awok\Core\Authorization\AuthorizationServiceProvider::class);
+$app->register(\Awok\Core\Authorization\AuthorizationServiceProvider::class);
 $app->register(\Awok\Modules\Option\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\User\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Store\Providers\ModuleServiceProvider::class);
@@ -82,7 +76,6 @@ $app->register(Awok\Modules\Taxonomy\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Product\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Location\Providers\ModuleServiceProvider::class);
 $app->register(Awok\Modules\Currency\Providers\ModuleServiceProvider::class);
-$app->register(\Awok\Providers\CatchAllOptionsRequestsProvider::class);
 
 /*
 |--------------------------------------------------------------------------
