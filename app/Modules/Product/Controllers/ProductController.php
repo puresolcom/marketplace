@@ -127,7 +127,7 @@ class ProductController extends Controller
             'categories',
             'tags',
         ];
-        $productData    = $request->expected($expectedFields);
+        $productData    = $request->expect($expectedFields);
 
         $validator = $this->validate($request, [
             'title'          => 'required',
@@ -327,5 +327,29 @@ class ProductController extends Controller
         }
 
         return $this->jsonResponse($result);
+    }
+
+    /**
+     * @api             {DELETE}    /product/:id   6. Delete product
+     * @apiDescription  Soft delete a product
+     * @apiGroup        Product
+     *
+     * @param $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        try {
+            $delete = $this->productService->delete($id);
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
+        }
+
+        if (! $delete) {
+            return $this->jsonResponse(null, 'Unable to delete product', 400);
+        }
+
+        return $this->jsonResponse($delete, 'Product deleted successfully');
     }
 }

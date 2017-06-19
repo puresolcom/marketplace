@@ -315,18 +315,6 @@ class ProductService extends BaseService
     }
 
     /**
-     * Deletes a product by id
-     *
-     * @param $id
-     *
-     * @return bool
-     */
-    public function delete($id)
-    {
-        return ($delete = $this->getBaseModel()->find($id)) ? $delete->delete() : false;
-    }
-
-    /**
      * Gets array of product attributes and values
      *
      * @param $productID

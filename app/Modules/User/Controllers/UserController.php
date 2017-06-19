@@ -67,63 +67,24 @@ class UserController extends Controller
     }
 
     /**
-     * @api             {POST}                 /user/user      3. Create User
-     * @apiDescription  Create a new currency
-     * @apiGroup        User
-     * @apiParam       {String}             name                    Name of the User
-     * @apiParam       {String}             slug                    User code name
-     * @apiParam       {String}             type                    User type (city, area ..)
-     * @apiParam       {Number}             [parent_id]             Parent User ID
-     * @apiParam       {Number}             country_id              User Country ID
-     * @apiParamExample {json} Request-Example:
-     * {
-     *  "name"          : "Dubai",
-     *  "slug"          : "ae-du",
-     *  "type"          : "city",
-     *  "parent_id"     : 10,
-     *  "country_id"    : 1
-     * }
-     *
-     * @param \Awok\Core\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        $expectedFields = ['name', 'slug', 'type', 'parent_id', 'country_id'];
-        $currencyData   = $request->expected($expectedFields);
-
-        $validator = $this->validate($request, [
-            'name'       => 'required',
-            'slug'       => 'required|alpha_dash|unique:users',
-            'type'       => ['required', Rule::in(['city', 'area'])],
-            'parent_id'  => 'nullable|numeric|exists:users,id',
-            'country_id' => 'nullable|required_if:type,city|numeric|exists:countries,id',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->jsonResponse(null, 'Error while validating your input', 400, $validator->getMessageBag()->all());
-        }
-
-        $created = $this->user->create($currencyData);
-
-        if (! $created) {
-            return $this->jsonResponse(null, 'Unable to add user', 400);
-        }
-
-        return $this->jsonResponse($created, 'User added successfully');
-    }
-
-    /**
-     * @api            {PUT}                 /user/:id            4. Update user
+     * @api            {PUT}                 /user/:id            3. Update user
      * @apiDescription Update user information
      * @apiGroup       User
-     * @apiParam       {String}             [name]                    Name of the User
-     * @apiParam       {Number}             [parent_id]               Parent User ID
+     * @apiParam       {String}             [name]                    Full name
+     * @apiParam       {Number}             [phone_primary]           Primary phone number
+     * @apiParam       {Number}             [phone_secondary]         Secondary phone number
+     * @apiParam       {String}             [password]                Account Password
+     * @apiParam       {Boolean}            [active]                  Activate account
+     * @apiParam       {Boolean}            [approved]                Approve account
+     *
      * @apiParamExample {json} Request-Example:
      * {
-     *  "name"          : "Dubai",
-     *  "parent_id"     : 10
+     *  "name"              : "Mohammed Anwar",
+     *  "phone_primary"     : "1234567890",
+     *  "phone_secondary"   : "1234567890",
+     *  "password"          : "p@ssw0rd",
+     *  "active":           : true,
+     *  "approved":         : true
      * }
      *
      * @param \Awok\Core\Http\Request $request
@@ -133,12 +94,14 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $expectedFields = ['name', 'parent_id'];
-        $userData       = $request->expected($expectedFields);
+        $expectedFields = ['name', 'phone_primary', 'phone_secondary', 'password', 'active', 'approved'];
+        $userData       = $request->expect($expectedFields);
 
         $validator = $this->validate($request, [
-            'country_id' => 'nullable|numeric|exists:countries,id',
-            'parent_id'  => 'nullable|numeric|exists:users,id',
+            'name'            => 'string',
+            'phone_primary'   => 'numeric',
+            'phone_secondary' => 'numeric',
+            'password'        => 'min:6|max:32',
         ]);
 
         if ($validator->fails()) {
@@ -146,7 +109,7 @@ class UserController extends Controller
         }
 
         try {
-            $updated = $this->user->update($id, $userData);
+            $updated = $this->userService->update($id, $userData);
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
         }
@@ -156,5 +119,29 @@ class UserController extends Controller
         }
 
         return $this->jsonResponse($updated, 'user updated successfully');
+    }
+
+    /**
+     * @api             {DELETE}    /user/:id   4. Delete user
+     * @apiDescription  Soft delete a user
+     * @apiGroup        User
+     *
+     * @param $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        try {
+            $delete = $this->userService->delete($id);
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e, $e->getCode() ?? 400);
+        }
+
+        if (! $delete) {
+            return $this->jsonResponse(null, 'Unable to delete user', 400);
+        }
+
+        return $this->jsonResponse($delete, 'User deleted successfully');
     }
 }

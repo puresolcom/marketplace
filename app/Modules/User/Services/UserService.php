@@ -84,6 +84,8 @@ class UserService extends BaseService
     }
 
     /**
+     * Create new user
+     *
      * @param $userData
      *
      * @return mixed
@@ -91,5 +93,33 @@ class UserService extends BaseService
     public function create(array $userData)
     {
         return $this->getBaseModel()->create($userData);
+    }
+
+    /**
+     * Update current user
+     *
+     * @param       $id
+     * @param array $userData
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function update($id, array $userData)
+    {
+        $user = $this->getBaseModel()->find($id);
+
+        if (array_has($userData, 'password')) {
+            $userData['password'] = app('hash')->make($userData['password']);
+        }
+
+        if (array_has($userData, 'approved')) {
+            $userData['approved_by'] = app('auth')->user()->id;
+        }
+
+        if (! $user) {
+            throw new \Exception('Unable to find user', 400);
+        }
+
+        return $user->update($userData);
     }
 }

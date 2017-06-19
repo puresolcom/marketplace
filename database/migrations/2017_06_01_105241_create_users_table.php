@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->boolean('approved')->nullable();
             $table->unsignedInteger('approved_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             // Indexes
             $table->index('name');

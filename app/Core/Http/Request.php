@@ -13,7 +13,7 @@ class Request extends \Illuminate\Http\Request
      *
      * @return array
      */
-    public function expected($keys)
+    public function expect($keys)
     {
         $all  = $this->request->all();
         $only = $this->only(is_array($keys) ? $keys : func_get_args());

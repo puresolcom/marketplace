@@ -68,8 +68,8 @@ class AuthController extends Controller
      * @apiGroup        Authentication
      * @apiParam        {String}   name                First name
      * @apiParam        {String}   email               E-mail Address
-     * @apiParam        {String}   phone_primary       Primary Phone number
-     * @apiParam        {String}   [phone_secondary]   Secondary Phone number
+     * @apiParam        {Number}   phone_primary       Primary Phone number
+     * @apiParam        {Number}   [phone_secondary]   Secondary Phone number
      * @apiParam        {String}   password            Password
      * @apiParamExample {json} Request-Example:
      * {

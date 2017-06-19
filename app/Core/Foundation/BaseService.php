@@ -38,7 +38,7 @@ abstract class BaseService
 
     protected function getBaseModel()
     {
-        return $this->baseModel;
+        return $this->makeModel();
     }
 
     public function setBaseModel($baseModelFQN)
@@ -89,6 +89,18 @@ abstract class BaseService
                 $this->baseModel = $this->baseModel->where($field, '=', $value);
             }
         }
+    }
+
+    /**
+     * Deletes object by id
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function delete($id)
+    {
+        return ($delete = $this->getBaseModel()->find($id)) ? $delete->delete() : false;
     }
 
     public function makeModel()
