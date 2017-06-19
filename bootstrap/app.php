@@ -51,6 +51,10 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, Awok\Console\Kernel:
 |
 */
 
+$app->middleware([
+    \Awok\Core\Http\Middleware\CORSMiddleware::class,
+]);
+
 $app->routeMiddleware([
     'auth' => Awok\Http\Middleware\Authenticate::class,
     'role' => Awok\Core\Authorization\Middleware\RoleMiddleware::class,
@@ -67,6 +71,7 @@ $app->routeMiddleware([
 |
 */
 $app->register(Awok\Providers\AppServiceProvider::class);
+$app->register(\Awok\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(Awok\Providers\AuthServiceProvider::class);
 $app->register(\Awok\Core\Authorization\AuthorizationServiceProvider::class);
 $app->register(\Awok\Modules\Option\Providers\ModuleServiceProvider::class);

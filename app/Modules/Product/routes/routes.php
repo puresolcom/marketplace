@@ -1,6 +1,6 @@
 <?php
 
-$app->group(['middleware' => 'auth:api'], function () use ($app) {
+$app->group(['middleware' => ['auth:api', 'role:admin|seller']], function () use ($app) {
 
     // Attribute Routes
     $app->post('/attribute', 'AttributeController@create');
