@@ -55,6 +55,10 @@ class UserService extends BaseService
          */
         $response = $http->request('POST', $kongMasterURL.'/oauth2/token', [
             'verify'      => false,
+            'curl'        => [
+                CURLOPT_SSLVERSION     => 1,
+                CURLOPT_SSL_VERIFYPEER => false,
+            ],
             'form_params' => [
                 'client_id'            => $clientID,
                 'client_secret'        => $clientSecret,
