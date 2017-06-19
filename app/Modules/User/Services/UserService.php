@@ -39,11 +39,6 @@ class UserService extends BaseService
             throw new \Exception('Invalid Login Credentials', 400);
         }
 
-        $kongMasterURL = $this->option->get('global', 'api_url');
-        if (! $kongMasterURL) {
-            throw new \Exception('Unable to detect API Gateway URL', 400);
-        }
-
         $clientID          = $this->option->get('auth', 'oauth_client_id');
         $clientSecret      = $this->option->get('auth', 'oauth_client_secret');
         $oauthProvisionKey = $this->option->get('auth', 'oauth_provision_key');
@@ -53,7 +48,7 @@ class UserService extends BaseService
         /**
          * @throws ClientException
          */
-        $response = $http->request('POST', $kongMasterURL.'/oauth2/token', [
+        $response = $http->request('POST', config('app.gateway_url').'/oauth2/token', [
             'verify'      => false,
             'curl'        => [
                 CURLOPT_SSLVERSION     => 1,

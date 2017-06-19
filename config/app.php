@@ -12,6 +12,7 @@ return [
     | will not be safe. Please do this before deploying an application!
     |
     */
+    'gateway_url' => env('APP_GATEWAY_URL', 'https://192.168.1.231:8443/market/dev'),
 
     'key' => env('APP_KEY', '1AwX1D1T^!3-bi5fdB0aXYYiMDhW^S2v'),
 
