@@ -91,7 +91,8 @@ class Request extends \Illuminate\Http\Request
                 $relationName      = implode('.', $relationFragments);
             }
 
-            $result[] = [
+            $filterKey          = ! (empty($relationName)) ? $relationName.'.'.$field : $field;
+            $result[$filterKey] = [
                 'relational'   => $relational,
                 'relationName' => $relationName,
                 'field'        => $field,

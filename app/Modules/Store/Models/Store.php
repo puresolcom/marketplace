@@ -11,6 +11,8 @@ class Store extends Model
 {
     protected $guarded = [];
 
+    public $ownerKey = 'user_id';
+
     public function city()
     {
         return $this->belongsTo(Location::class, 'city_id');

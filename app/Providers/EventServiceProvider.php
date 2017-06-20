@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Providers;
+namespace Awok\Providers;
 
+use Awok\Core\Events\RestBuilderQueryReady;
+use Awok\Core\Listeners\RestBuilderRestrictAccess;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -12,8 +14,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        RestBuilderQueryReady::class => [
+            RestBuilderRestrictAccess::class,
         ],
     ];
 }

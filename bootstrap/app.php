@@ -70,6 +70,7 @@ $app->routeMiddleware([
 | totally optional, so you are not required to uncomment this line.
 |
 */
+$app->register(\Awok\Providers\EventServiceProvider::class);
 $app->register(Awok\Providers\AppServiceProvider::class);
 $app->register(\Awok\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(Awok\Providers\AuthServiceProvider::class);

@@ -10,6 +10,17 @@ abstract class BaseService
 
     protected $baseModelFQN;
 
+    protected function getBaseModel()
+    {
+        return $this->makeModel();
+    }
+
+    public function setBaseModel($baseModelFQN)
+    {
+        $this->baseModelFQN = $baseModelFQN;
+        $this->baseModel    = app($baseModelFQN);
+    }
+
     /**
      * Query against model
      *
@@ -30,21 +41,11 @@ abstract class BaseService
         $limit = null,
         $dataKey = null
     ) {
+
         $result = $this->getBaseModel()->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
         $this->resetModel();
 
         return $result;
-    }
-
-    protected function getBaseModel()
-    {
-        return $this->makeModel();
-    }
-
-    public function setBaseModel($baseModelFQN)
-    {
-        $this->baseModelFQN = $baseModelFQN;
-        $this->baseModel    = app($baseModelFQN);
     }
 
     /**

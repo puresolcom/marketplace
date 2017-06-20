@@ -292,17 +292,19 @@ class ProductService extends BaseService
             $relations     = ['attributes', 'categories', 'tags'];
             // Exclude attributes and taxonomies before updating product
             $productData = array_except($data, array_merge($translatables, $relations));
-
-            $validTranslations = $this->validateTranslatable($data, $translatables);
-
-            if (! $validTranslations) {
-                throw new \Exception('Invalid translations format');
-            }
-
             \DB::beginTransaction();
+
             $product->fill($productData)->save();
 
-            $this->setTranslation($product, array_only($data, $translatables), $translatables);
+            if (array_has($data, $translatables)) {
+                $validTranslations = $this->validateTranslatable($data, $translatables);
+
+                if (! $validTranslations) {
+                    \DB::rollBack();
+                    throw new \Exception('Invalid translations format');
+                }
+                $this->setTranslation($product, array_only($data, $translatables), $translatables);
+            }
 
             $this->setProductAssociations($data, $product);
         } catch (\Exception $e) {
@@ -335,6 +337,7 @@ class ProductService extends BaseService
         foreach ($attributes as $attribute) {
             $result[$attribute->slug]                 = $attribute->toArray();
             $result[$attribute->slug]['translations'] = $attribute->translations;
+            $result[$attribute->slug]['options']      = $attribute->options()->with('translations')->toArray();
             $result[$attribute->slug]['values']       = $attribute->values()->where('product_id', '=', $productID)->with('translations')->get()->toArray();
         }
 

@@ -2,10 +2,14 @@
 
 namespace Awok\Core\Eloquent;
 
+use Awok\Core\Eloquent\Traits\ProtectedCRUD;
+use Awok\Core\Events\RestBuilderQueryReady;
 use Illuminate\Database\Eloquent\Concerns\QueriesRelationships;
 
 class Model extends \Illuminate\Database\Eloquent\Model
 {
+    use ProtectedCRUD;
+
     /**
      * Maps API symbols to SQL-like symbols
      *
@@ -49,11 +53,13 @@ class Model extends \Illuminate\Database\Eloquent\Model
         $dataKey = null,
         $pagination = true
     ) {
-        $model   = $this;
-        $select  = $this->prepareColumns($fields, $model);
-        $with    = $this->prepareRelations($relations, $select);
-        $filter  = $this->prepareFilters($filters, $with);
-        $sort    = $this->prepareSorting($sort, $filter);
+        $model  = $this;
+        $select = $this->prepareColumns($fields, $model);
+        $with   = $this->prepareRelations($relations, $select);
+        $filter = $this->prepareFilters($filters, $with);
+        $sort   = $this->prepareSorting($sort, $filter);
+
+        event(new RestBuilderQueryReady($sort, $this));
         $dataKey = $dataKey ?? 'results';
 
         return ($pagination) ? $this->paginateResult($limit, $dataKey, $sort) : $sort;

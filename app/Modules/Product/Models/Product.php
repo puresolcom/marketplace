@@ -3,6 +3,7 @@
 namespace Awok\Modules\Product\Models;
 
 use Awok\Core\Eloquent\Model;
+use Awok\Modules\Store\Models\Store;
 use Awok\Modules\Taxonomy\Models\Taxonomy;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -13,6 +14,8 @@ class Product extends Model
     protected $guarded = [];
 
     protected $dates = ['deleted_at'];
+
+    public $ownerKey = 'store.user_id';
 
     //protected $appends = ['attributes'];
     //
@@ -26,6 +29,11 @@ class Product extends Model
     //        'values.translations',
     //    ])->get();
     //}
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
 
     public function attributes()
     {
