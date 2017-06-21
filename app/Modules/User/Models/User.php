@@ -20,6 +20,8 @@ class User extends \Awok\Core\Eloquent\Model implements AuthenticatableContract,
      */
     protected $guarded = [];
 
+    public $ownerKey = 'id';
+
     /**
      * The attributes excluded from the model's JSON form.
      *

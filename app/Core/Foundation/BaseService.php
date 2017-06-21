@@ -104,9 +104,9 @@ abstract class BaseService
         return ($delete = $this->getBaseModel()->find($id)) ? $delete->delete() : false;
     }
 
-    public function makeModel()
+    public function makeModel($modelFQN = null)
     {
-        $model = app($this->baseModelFQN);
+        $model = app($modelFQN ?? $this->baseModelFQN);
 
         if (! $model instanceof Model) {
             throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");

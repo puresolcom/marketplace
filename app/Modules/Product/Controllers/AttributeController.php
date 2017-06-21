@@ -19,7 +19,7 @@ class AttributeController extends Controller
     }
 
     /**
-     * @api                     {get}   /product/attribute:id   1. Get Attribute
+     * @api                     {get}   /product/attribute/:id   1. Get Attribute
      * @apiDescription          Finds a specific object using the provided :id segment
      * @apiGroup                Attribute
      * @apiParam {String}       [fields]             Comma-separated list of required fields

@@ -53,7 +53,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/product/attribute:id",
+    "url": "/product/attribute/:id",
     "title": "1. Get Attribute",
     "description": "<p>Finds a specific object using the provided :id segment</p>",
     "group": "Attribute",
@@ -1208,6 +1208,58 @@ define({ "api": [
     "name": "PutProductId"
   },
   {
+    "type": "get",
+    "url": "/user/roles",
+    "title": "1. Roles List",
+    "description": "<p>Getting paginated objects list</p>",
+    "group": "Role",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "fields",
+            "description": "<p>Comma-separated list of required fields</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "with",
+            "description": "<p>Comma-separated list of object relations</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "q",
+            "description": "<p>Comma-separated list of filters</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sort",
+            "description": "<p>Comma-separated list of sorting rules</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>Max number of results per response</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "app/Modules/User/Controllers/RoleController.php",
+    "groupTitle": "Role",
+    "name": "GetUserRoles"
+  },
+  {
     "type": "DELETE",
     "url": "/store/:id",
     "title": "5. Delete store",
@@ -1304,6 +1356,71 @@ define({ "api": [
   {
     "type": "post",
     "url": "/store",
+    "title": "4. Update Store",
+    "group": "Store",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "name",
+            "description": "<p>Store name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "street_address_1",
+            "description": "<p>Store Physical Address 1</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "street_address_2",
+            "description": "<p>Store Physical Address 2</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": true,
+            "field": "city_id",
+            "description": "<p>Store City</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": true,
+            "field": "country_id",
+            "description": "<p>Country for the store (will be detected automatically from the</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": true,
+            "field": "postal_code",
+            "description": "<p>Store Postal code</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example",
+          "content": "{\n     \"name\": \"Almaya store\",\n     \"street_address_1\": \"G floor, Lake point tower, Cluster N, JLT\",\n     \"street_address_2\": \"G floor, Lake point tower, Cluster Z, JLT\",\n     \"city_id\": 1,\n     \"country_id\": 1,\n     \"postal_code\": \"12345\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Modules/Store/Controllers/StoreController.php",
+    "groupTitle": "Store",
+    "name": "PostStore"
+  },
+  {
+    "type": "post",
+    "url": "/store",
     "title": "3. Create Store",
     "group": "Store",
     "parameter": {
@@ -1371,71 +1488,6 @@ define({ "api": [
         {
           "title": "Request-Example",
           "content": "{\n     \"name\": \"Almaya store\",\n     \"slug\": \"almaya\",\n     \"street_address_1\": \"G floor, Lake point tower, Cluster N, JLT\",\n     \"street_address_2\": \"G floor, Lake point tower, Cluster Z, JLT\",\n     \"city_id\": 1,\n     \"country_id\": 1,\n     \"postal_code\": \"12345\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/Modules/Store/Controllers/StoreController.php",
-    "groupTitle": "Store",
-    "name": "PostStore"
-  },
-  {
-    "type": "post",
-    "url": "/store",
-    "title": "4. Update Store",
-    "group": "Store",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "name",
-            "description": "<p>Store name</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "street_address_1",
-            "description": "<p>Store Physical Address 1</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "street_address_2",
-            "description": "<p>Store Physical Address 2</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": true,
-            "field": "city_id",
-            "description": "<p>Store City</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": true,
-            "field": "country_id",
-            "description": "<p>Country for the store (will be detected automatically from the</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": true,
-            "field": "postal_code",
-            "description": "<p>Store Postal code</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Request-Example",
-          "content": "{\n     \"name\": \"Almaya store\",\n     \"street_address_1\": \"G floor, Lake point tower, Cluster N, JLT\",\n     \"street_address_2\": \"G floor, Lake point tower, Cluster Z, JLT\",\n     \"city_id\": 1,\n     \"country_id\": 1,\n     \"postal_code\": \"12345\"\n}",
           "type": "json"
         }
       ]
@@ -1738,6 +1790,17 @@ define({ "api": [
     "name": "GetUserId"
   },
   {
+    "type": "get",
+    "url": "/user/:id/roles",
+    "title": "5. Get User Roles",
+    "description": "<p>Get user roles</p>",
+    "group": "User",
+    "version": "0.0.0",
+    "filename": "app/Modules/User/Controllers/RoleController.php",
+    "groupTitle": "User",
+    "name": "GetUserIdRoles"
+  },
+  {
     "type": "PUT",
     "url": "/user/:id",
     "title": "3. Update user",
@@ -1802,5 +1865,30 @@ define({ "api": [
     "filename": "app/Modules/User/Controllers/UserController.php",
     "groupTitle": "User",
     "name": "PutUserId"
+  },
+  {
+    "type": "put",
+    "url": "/user/:id/roles",
+    "title": "6. Update user roles",
+    "description": "<p>update user roles</p>",
+    "group": "User",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example-Attach-Detach-Roles:",
+          "content": "{\n     \"attach\": [10,15,35],\n     \"detach\": [5]\n}",
+          "type": "json"
+        },
+        {
+          "title": "Request-Example-Sync-Roles:",
+          "content": "{\n     \"sync\": [10,15,35]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Modules/User/Controllers/RoleController.php",
+    "groupTitle": "User",
+    "name": "PutUserIdRoles"
   }
 ] });

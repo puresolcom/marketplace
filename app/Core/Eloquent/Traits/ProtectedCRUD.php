@@ -7,7 +7,7 @@ use Awok\Core\Eloquent\Model;
 
 trait ProtectedCRUD
 {
-    public $ownerKey = false;
+    public $ownerKey = true;
 
     public static function boot()
     {

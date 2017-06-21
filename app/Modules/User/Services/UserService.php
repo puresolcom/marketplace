@@ -4,6 +4,7 @@ namespace Awok\Modules\User\Services;
 
 use Awok\Core\Foundation\BaseService;
 use Awok\Modules\Option\Services\OptionService;
+use Awok\Modules\User\Models\Role;
 use Awok\Modules\User\Models\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -121,5 +122,145 @@ class UserService extends BaseService
         }
 
         return $user->update($userData);
+    }
+
+    /**
+     * Query against model
+     *
+     * @param null   $fields
+     * @param null   $filters
+     * @param null   $sort
+     * @param null   $relations
+     * @param null   $limit
+     * @param string $dataKey
+     *
+     * @return mixed
+     */
+    public function fetchRoles(
+        $fields = null,
+        $filters = null,
+        $sort = null,
+        $relations = null,
+        $limit = null,
+        $dataKey = null
+    ) {
+
+        $result = $this->makeModel(Role::class)->restQueryBuilder($fields, $filters, $sort, $relations, $limit, $dataKey);
+        $this->resetModel();
+
+        return $result;
+    }
+
+    /**
+     * Get user roles
+     *
+     * @param $userID int
+     *
+     * @throws \Exception
+     * @return array|false
+     */
+    public function getRoles($userID)
+    {
+        $user = $this->get($userID, null, null);
+
+        if (! $user) {
+            throw new \Exception('User cannot be found');
+        }
+
+        return $user->roles;
+    }
+
+    /**
+     * Set user roles
+     *
+     * @param       $userID
+     * @param array $roles
+     *
+     * @return bool
+     */
+    public function setRoles($userID, array $roles)
+    {
+        \DB::beginTransaction();
+        if (isset($roles['sync']) && is_array($roles['sync'])) {
+            if (! $this->syncRoles($userID, $roles['sync'])) {
+                \DB::rollBack();
+            }
+        } else {
+            if (isset($roles['attach']) && is_array($roles['attach'])) {
+                if (! $this->attachRole($userID, $roles['attach'])) {
+                    \DB::rollBack();
+                }
+            }
+
+            if (isset($roles['detach']) && is_array($roles['detach'])) {
+                if (! $this->detachRole($userID, $roles['detach'])) {
+                    \DB::rollBack();
+                }
+            }
+        }
+
+        \DB::commit();
+
+        return true;
+    }
+
+    /**
+     * Reset current user rules to the passed roles ids only (Will delete other roles)
+     *
+     * @param       $userID
+     * @param array $rolesIDs
+     *
+     * @throws  \Exception
+     * @return bool
+     */
+    public function syncRoles($userID, array $rolesIDs)
+    {
+        $user = $this->get($userID, null, null);
+
+        if (! $user) {
+            throw new \Exception('User cannot be found');
+        }
+
+        return $user->roles()->sync($rolesIDs);
+    }
+
+    /**
+     * Attach user role/s
+     *
+     * @param $userID
+     * @param $roleIDs
+     *
+     * @throws  \Exception
+     * @return mixed
+     */
+    public function attachRole($userID, $roleIDs)
+    {
+        $user = $this->get($userID, null, null);
+
+        if (! $user) {
+            throw new \Exception('User cannot be found');
+        }
+
+        return $user->roles()->syncWithoutDetaching($roleIDs);
+    }
+
+    /**
+     * Detach user role/s
+     *
+     * @param $userID
+     * @param $roleIDs
+     *
+     * @throws  \Exception
+     * @return bool
+     */
+    public function detachRole($userID, $roleIDs)
+    {
+        $user = $this->get($userID, null, null);
+
+        if (! $user) {
+            throw new \Exception('User cannot be found');
+        }
+
+        return $user->roles()->detach($roleIDs);
     }
 }
