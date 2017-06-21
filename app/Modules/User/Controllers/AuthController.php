@@ -54,12 +54,12 @@ class AuthController extends Controller
         } catch (ClientException $e) {
             $response = $e->getResponse();
 
-            return $this->jsonResponse($response->getBody()->getContents(), $e->getMessage(), 400);
+            return $this->jsonResponse($response->getBody()->getContents(), $e->getMessage(), $response->getStatusCode());
         } catch (\Exception $e) {
-            return $this->jsonResponse($e->getMessage(), 400);
+            return $this->jsonResponse(null, $e->getMessage(), 400);
         }
 
-        return $this->response($response->getBody()->getContents(), $response->getStatusCode());
+        return $this->response(null, $response->getBody()->getContents(), $response->getStatusCode());
     }
 
     /**
