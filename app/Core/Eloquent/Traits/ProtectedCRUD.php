@@ -25,7 +25,7 @@ trait ProtectedCRUD
     public function verifyOwnership()
     {
         // return if ownership is false or admin is logged in
-        if (! $this->ownerKey || app('auth')->user()->hasRole('admin')) {
+        if (! app('auth')->user() || ! $this->ownerKey || app('auth')->user()->hasRole('admin')) {
             return true;
         } else {
             // Relational ownership
