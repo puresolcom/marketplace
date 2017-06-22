@@ -46,6 +46,7 @@ class UserService extends BaseService
             'approved',
             'created_at',
         ])->first();
+
         if (! $user || ! app('hash')->check($loginCredentials['password'], $user->password)) {
             throw new \Exception('Invalid Login Credentials', 400);
         }
