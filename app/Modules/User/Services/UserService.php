@@ -21,8 +21,14 @@ class UserService extends BaseService
      */
     protected $option;
 
-    public function __construct()
+    /**
+     * @var \Awok\Modules\User\Models\Role
+     */
+    protected $roleModel;
+
+    public function __construct(Role $roleModel)
     {
+        $this->roleModel = $roleModel;
         $this->setBaseModel(User::class);
         $this->option = app('option');
     }
@@ -104,7 +110,22 @@ class UserService extends BaseService
      */
     public function create(array $userData)
     {
-        return $this->getBaseModel()->create($userData);
+        \DB::beginTransaction();
+        $created = $this->getBaseModel()->create($userData);
+
+        if ($created) {
+            $sellerRole = $this->roleModel->where('role', '=', 'seller')->first();
+
+            if (! $sellerRole) {
+                throw new \Exception('Seller role cannot be found');
+            }
+
+            $this->attachRole($created->id, [$sellerRole->id]);
+        }
+
+        \DB::commit();
+
+        return $created;
     }
 
     /**
