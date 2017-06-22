@@ -35,7 +35,17 @@ class UserService extends BaseService
      */
     public function login(array $loginCredentials)
     {
-        $user = $this->findWhere(['email' => $loginCredentials['username']], ['id', 'email', 'password'])->first();
+        $user = $this->findWhere(['email' => $loginCredentials['username']], [
+            'id',
+            'name',
+            'email',
+            'password',
+            'phone_primary',
+            'phone_secondary',
+            'active',
+            'approved',
+            'created_at',
+        ])->first();
         if (! $user || ! app('hash')->check($loginCredentials['password'], $user->password)) {
             throw new \Exception('Invalid Login Credentials', 400);
         }
@@ -66,7 +76,7 @@ class UserService extends BaseService
             ],
         ]);
 
-        return $response;
+        return array_merge(json_decode($response->getBody()->getContents(), true), ['user' => $user->toArray()]);
     }
 
     /**

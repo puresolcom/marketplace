@@ -86,6 +86,7 @@ class StoreController extends Controller
      *      "country_id": 1,
      *      "postal_code": "12345"
      * }
+     *
      * @route           /store [POST]
      *
      * @param \Awok\Core\Http\Request $request
@@ -132,7 +133,7 @@ class StoreController extends Controller
     }
 
     /**
-     * @api             {post}      /store  4. Update Store
+     * @api             {PUT}      /store  4. Update Store
      * @apiGroup        Store
      * @apiParam        {String}    [name]                Store name
      * @apiParam        {String}    [street_address_1]    Store Physical Address 1

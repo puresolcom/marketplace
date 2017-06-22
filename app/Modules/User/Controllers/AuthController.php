@@ -59,7 +59,7 @@ class AuthController extends Controller
             return $this->jsonResponse(null, $e->getMessage(), 400);
         }
 
-        return $this->jsonResponse(json_decode($response->getBody()->getContents()), 'Logged in successfully', $response->getStatusCode());
+        return $this->jsonResponse($response, 'Logged in successfully', 200);
     }
 
     /**
