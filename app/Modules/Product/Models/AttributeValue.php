@@ -14,6 +14,15 @@ class AttributeValue extends Model
 
     protected $hidden = ['product_id', 'created_at', 'updated_at'];
 
+    public $protected = true;
+
+    public $ownerKey = 'product.store.user_id';
+
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'product_id');
+    }
+
     public function translations()
     {
         return $this->hasMany(AttributeValueTranslation::class, 'translatable_id');

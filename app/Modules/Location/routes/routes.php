@@ -1,6 +1,6 @@
 <?php
 
-$app->group(['middleware' => 'auth:api', ['middleware' => ['auth:api', 'role:admin']]], function () use ($app) {
+$app->group(['middleware' => ['auth:api', 'role:admin']], function () use ($app) {
 
     $app->post('country', 'CountryController@create');
     $app->put('country/{id}', 'CountryController@update');

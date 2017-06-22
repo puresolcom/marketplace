@@ -7,7 +7,9 @@ use Awok\Core\Eloquent\Model;
 
 trait ProtectedCRUD
 {
-    public $ownerKey = true;
+    public $protected = false;
+
+    public $ownerKey = 'user_id';
 
     public static function boot()
     {
@@ -25,7 +27,7 @@ trait ProtectedCRUD
     public function verifyOwnership()
     {
         // return if ownership is false or admin is logged in
-        if (! app('auth')->user() || ! $this->ownerKey || app('auth')->user()->hasRole('admin')) {
+        if (! $this->protected || ! app('auth')->user() || app('auth')->user()->hasRole('admin')) {
             return true;
         } else {
             // Relational ownership
@@ -50,7 +52,7 @@ trait ProtectedCRUD
     public function filterByOwner($builderInstance)
     {
         // return if ownership is false or admin is logged in
-        if (! app('auth')->user() || ! $this->ownerKey || app('auth')->user()->hasRole('admin')) {
+        if (! $this->protected || ! app('auth')->user() || app('auth')->user()->hasRole('admin')) {
             return true;
         } else {
             // Relational ownership
