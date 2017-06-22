@@ -11,6 +11,8 @@ class Store extends Model
 {
     protected $guarded = [];
 
+    public $protected = true;
+
     public $ownerKey = 'user_id';
 
     public function city()
