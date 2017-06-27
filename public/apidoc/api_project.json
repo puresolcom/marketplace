@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Awok Marketplace Microservice",
   "title": "Awok Marketplace",
-  "url": "https://192.168.1.231:8443/market/dev/",
+  "url": "https://192.168.1.231:8443/market/dev",
   "header": {
     "title": "Introduction",
     "content": "<h1>Hello, Developer!</h1>\n<p>This is Awok.com Marketplace REST API documentation and Guide, Carefully read the the information below in order to get grasp of our API</p>\n<hr>\n<h2><strong>Conventions</strong></h2>\n<p>In order to get the best result our of our API, you will have to read and understand the following conventions.</p>\n<h3>Routing conventions</h3>\n<p>This is an entity-based Rest-API so most of our routes will be respecting the following convention with different HTTP methods <em>(GET, POST, PUT, DELETE)</em></p>\n<p><code>/entity</code></p>\n<p><code>/entity/:id</code></p>\n<p><code>/entity/:id/sub-entity</code></p>\n<p><code>/entity/:id/sub-entity/:id</code></p>\n<p><strong>Important Note:</strong> Some routes will be as follows <code>/entity/sub-entity</code> with no primary-key in between, this kind of routes are different that they have no data relations but for maintaining realistic patterns one good example route is <code>/product/attribute</code> instead of <code>/attribute</code> the reason for that is <em>&quot;attribute&quot;</em> alone is meaning-less without a product.</p>\n<h3>Resource customizing and filtering</h3>\n<p>This section is meant to explain how to</p>\n<ol>\n<li>Customize(Select) resource fields.</li>\n<li>Resolve relations.</li>\n<li>Filter results.</li>\n<li>Order results.</li>\n<li>Set results limit.</li>\n</ol>\n<h4><strong>Select Fields:</strong></h4>\n<p>You can select custom fields on most of our endpoints by appending the following query param</p>\n<p><code>?fields=field_one,field_two,field_three</code></p>\n<h4><strong>Resolve relations:</strong></h4>\n<p>You can resolve entity relations and get related entities (Foreign keys) if there are any on most of our endpoints by appending the following query param</p>\n<p><code>?with=relationOne,relationTwo.relationThree</code></p>\n<h4><strong>Filter results:</strong></h4>\n<p>You can filter results on most of our endpoints by appending the following query param</p>\n<p><code>?q=field_one:value,field_two&lt;value,field_three=&gt;value</code></p>\n<p><strong>Available Comparison operators</strong></p>\n<ol>\n<li>Equal Sign &quot;=&quot; or &quot;:&quot;.</li>\n<li>Greater than &quot;&gt;&quot;.</li>\n<li>Less than &quot;&lt;&quot;.</li>\n<li>Greater than or equal &quot;&gt;=&quot;</li>\n<li>Less than or equal &quot;&lt;=&quot;</li>\n<li>Not Equal &quot;!=&quot;</li>\n</ol>\n<p><strong>Nested Relational Filters</strong></p>\n<p>You can filter by relations by using the relations joiner (dot) symbol</p>\n<p><code>?q=relation.key&lt;=500,relation.subRelation.key:value</code></p>\n<h4><strong>Order Results:</strong></h4>\n<p>You can sort results on most of our endpoints by appending the following query param</p>\n<p><code>?sort=id,!age</code>\nOr\n<code>?sort=id:asc,age:desc</code></p>\n<h4><strong>Limit Results:</strong></h4>\n<p>You can set results limit on most of our endpoints by appending the following query param</p>\n<p><code>?limit=100</code></p>\n"
@@ -13,7 +13,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-06-27T06:21:14.160Z",
+    "time": "2017-06-27T06:23:02.459Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }
