@@ -10,6 +10,7 @@ $app->group(['middleware' => ['auth:api', 'role:admin|seller']], function () use
     $app->get('/attribute', 'AttributeController@fetch');
 
     // Product Routes
+    $app->post('/{id}/media', 'MediaController@store');
     $app->post('/', 'ProductController@create');
     $app->put('/{id}', 'ProductController@update');
     $app->delete('/{id}', 'ProductController@delete');

@@ -2,6 +2,7 @@
 namespace Awok\Modules\Product\Providers;
 
 use Awok\Modules\Product\Services\AttributeService;
+use Awok\Modules\Product\Services\MediaService;
 use Awok\Modules\Product\Services\ProductService;
 
 class ModuleServiceProvider extends \Awok\Providers\ModuleServiceProvider
@@ -24,6 +25,10 @@ class ModuleServiceProvider extends \Awok\Providers\ModuleServiceProvider
 
         $this->app->singleton('product.attribute', function () {
             return $this->app->make(AttributeService::class);
+        });
+
+        $this->app->singleton('media', function () {
+            return $this->app->make(MediaService::class);
         });
     }
 }

@@ -46,5 +46,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('image', function () {
             return new ImageManager();
         });
+
+
     }
 }
