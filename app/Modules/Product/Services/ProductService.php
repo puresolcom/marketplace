@@ -343,8 +343,8 @@ class ProductService extends BaseService
         foreach ($attributes as $attribute) {
             $result[$attribute->slug]                 = $attribute->toArray();
             $result[$attribute->slug]['translations'] = $attribute->translations;
-            $result[$attribute->slug]['options']      = (! $optionsTranslations = $attribute->options()->with('translations')) ? $optionsTranslations->toArray() : [];
-            $result[$attribute->slug]['values']       = (! $attributesValues = $attribute->values()->where('product_id', '=', $productID)->with('translations')->get()) ? $attributesValues->toArray() : [];
+            $result[$attribute->slug]['options']      = (! empty($optionsTranslations = $attribute->options()->with('translations')->get())) ? $optionsTranslations->toArray() : [];
+            $result[$attribute->slug]['values']       = (! empty($attributesValues = $attribute->values()->where('product_id', '=', $productID)->with('translations')->get())) ? $attributesValues->toArray() : [];
         }
 
         return $result;
