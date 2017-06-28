@@ -13,6 +13,8 @@ class ProductMedia extends Model
 
     public $timestamps = true;
 
+    public $guarded = [];
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');

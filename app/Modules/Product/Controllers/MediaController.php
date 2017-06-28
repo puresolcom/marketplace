@@ -24,9 +24,23 @@ class MediaController extends Controller
         }
 
         try {
-            $this->mediaService->store($productID, $request->files->get('images'));
+            $attachedMedia = $this->mediaService->attachProductMedia($productID, $request->files->get('images'));
         } catch (\Exception $e) {
             return $this->jsonResponse(null, $e, 400);
         }
+
+        return $this->jsonResponse($attachedMedia, 'Media successfully attached to product', 200);
+    }
+
+    public function get($productID)
+    {
+
+        try {
+            $productMedia = $this->mediaService->getProductMedia($productID);
+        } catch (\Exception $e) {
+            return $this->jsonResponse(null, $e, 400);
+        }
+
+        return $this->jsonResponse($productMedia, 'Product media retrieved successfully', 200);
     }
 }

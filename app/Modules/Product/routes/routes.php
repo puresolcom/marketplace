@@ -11,6 +11,7 @@ $app->group(['middleware' => ['auth:api', 'role:admin|seller']], function () use
 
     // Product Routes
     $app->post('/{id}/media', 'MediaController@store');
+    $app->get('/{id}/media', 'MediaController@get');
     $app->post('/', 'ProductController@create');
     $app->put('/{id}', 'ProductController@update');
     $app->delete('/{id}', 'ProductController@delete');
