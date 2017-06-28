@@ -21,8 +21,14 @@ class UserService extends BaseService
      */
     protected $option;
 
-    public function __construct()
+    /**
+     * @var \Awok\Modules\User\Models\Role
+     */
+    protected $roleModel;
+
+    public function __construct(Role $roleModel)
     {
+        $this->roleModel = $roleModel;
         $this->setBaseModel(User::class);
         $this->option = app('option');
     }
@@ -35,7 +41,18 @@ class UserService extends BaseService
      */
     public function login(array $loginCredentials)
     {
-        $user = $this->findWhere(['email' => $loginCredentials['username']], ['id', 'email', 'password'])->first();
+        $user = $this->findWhere(['email' => $loginCredentials['username']], [
+            'id',
+            'name',
+            'email',
+            'password',
+            'phone_primary',
+            'phone_secondary',
+            'active',
+            'approved',
+            'created_at',
+        ])->first();
+
         if (! $user || ! app('hash')->check($loginCredentials['password'], $user->password)) {
             throw new \Exception('Invalid Login Credentials', 400);
         }
@@ -66,7 +83,7 @@ class UserService extends BaseService
             ],
         ]);
 
-        return $response;
+        return array_merge(json_decode($response->getBody()->getContents(), true), ['user' => $user->toArray()]);
     }
 
     /**
@@ -93,7 +110,22 @@ class UserService extends BaseService
      */
     public function create(array $userData)
     {
-        return $this->getBaseModel()->create($userData);
+        \DB::beginTransaction();
+        $created = $this->getBaseModel()->create($userData);
+
+        if ($created) {
+            $sellerRole = $this->roleModel->where('role', '=', 'seller')->first();
+
+            if (! $sellerRole) {
+                throw new \Exception('Seller role cannot be found');
+            }
+
+            $this->attachRole($created->id, [$sellerRole->id]);
+        }
+
+        \DB::commit();
+
+        return $created;
     }
 
     /**

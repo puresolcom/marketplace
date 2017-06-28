@@ -5,6 +5,7 @@ namespace Awok\Providers;
 use Awok\Core\Http\Request;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\ImageManager;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,5 +41,12 @@ class AppServiceProvider extends ServiceProvider
 
             return true;
         });
+
+        // create image
+        $this->app->singleton('image', function () {
+            return new ImageManager();
+        });
+
+
     }
 }

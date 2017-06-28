@@ -72,6 +72,7 @@ $app->routeMiddleware([
 */
 $app->register(\Awok\Providers\EventServiceProvider::class);
 $app->register(Awok\Providers\AppServiceProvider::class);
+$app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(\Awok\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(Awok\Providers\AuthServiceProvider::class);
 $app->register(\Awok\Core\Authorization\AuthorizationServiceProvider::class);

@@ -67,7 +67,7 @@ abstract class BaseService
     {
         $this->applyConditions($where);
 
-        $model = $this->getBaseModel()->get($columns);
+        $model = $this->baseModel->get($columns);
         $this->resetModel();
 
         return $model;

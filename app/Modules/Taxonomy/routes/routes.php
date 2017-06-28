@@ -1,5 +1,5 @@
 <?php
-$app->group(['middleware' => ['auth:api', 'role:admin']], function () use ($app) {
+$app->group(['middleware' => ['auth:api', 'role:admin|seller']], function () use ($app) {
     $app->post('', 'TaxonomyController@create');
     $app->put('/{id}', 'TaxonomyController@update');
     $app->delete('/{id}', 'TaxonomyController@delete');

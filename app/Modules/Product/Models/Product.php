@@ -15,6 +15,8 @@ class Product extends Model
 
     protected $dates = ['deleted_at'];
 
+    public $protected = true;
+
     public $ownerKey = 'store.user_id';
 
     //protected $appends = ['attributes'];
@@ -32,7 +34,7 @@ class Product extends Model
 
     public function store()
     {
-        return $this->belongsTo(Store::class);
+        return $this->belongsTo(Store::class, 'store_id');
     }
 
     public function attributes()

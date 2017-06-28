@@ -3,6 +3,7 @@ namespace Awok\Modules\Product\Services;
 
 use Awok\Core\Eloquent\Model;
 use Awok\Core\Foundation\BaseService;
+use Awok\Core\Http\Request;
 use Awok\Modules\Product\Models\Attribute;
 use Awok\Modules\Product\Models\AttributeValue;
 use Awok\Modules\Product\Models\AttributeValueTranslation;
@@ -290,8 +291,9 @@ class ProductService extends BaseService
         try {
             $translatables = ['title', 'description'];
             $relations     = ['attributes', 'categories', 'tags'];
+            $images        = ['images'];
             // Exclude attributes and taxonomies before updating product
-            $productData = array_except($data, array_merge($translatables, $relations));
+            $productData = array_except($data, array_merge($translatables, $relations, $images));
             \DB::beginTransaction();
 
             $product->fill($productData)->save();
@@ -316,6 +318,10 @@ class ProductService extends BaseService
         return true;
     }
 
+    public function uploadMedia(Model $product, Request $request)
+    {
+    }
+
     /**
      * Gets array of product attributes and values
      *
@@ -337,8 +343,8 @@ class ProductService extends BaseService
         foreach ($attributes as $attribute) {
             $result[$attribute->slug]                 = $attribute->toArray();
             $result[$attribute->slug]['translations'] = $attribute->translations;
-            $result[$attribute->slug]['options']      = $attribute->options()->with('translations')->toArray();
-            $result[$attribute->slug]['values']       = $attribute->values()->where('product_id', '=', $productID)->with('translations')->get()->toArray();
+            $result[$attribute->slug]['options']      = (! empty($optionsTranslations = $attribute->options()->with('translations')->get())) ? $optionsTranslations->toArray() : [];
+            $result[$attribute->slug]['values']       = (! empty($attributesValues = $attribute->values()->where('product_id', '=', $productID)->with('translations')->get())) ? $attributesValues->toArray() : [];
         }
 
         return $result;

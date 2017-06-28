@@ -310,7 +310,8 @@ class TaxonomyService extends BaseService
             throw new \Exception(sprintf('Invalid %s ids (%s)', ucfirst($type), implode(', ', $notFoundCategoriesIds)));
         }
 
-        $currentProductCategories    = $product->categories()->get();
+        $relationName                = strtolower(str_plural($type));
+        $currentProductCategories    = $product->$relationName()->get();
         $currentProductCategoriesIDs = $currentProductCategories->pluck('id')->toArray();
         $categoriesIDsToBeAdded      = array_diff($providedCategoriesIDs, $currentProductCategoriesIDs);
         $categoriesIDsToBeDeleted    = array_diff(array_merge($categoriesIDsToBeAdded, $currentProductCategoriesIDs), $providedCategoriesIDs);

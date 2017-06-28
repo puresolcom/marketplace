@@ -1356,71 +1356,6 @@
   {
     "type": "post",
     "url": "/store",
-    "title": "4. Update Store",
-    "group": "Store",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "name",
-            "description": "<p>Store name</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "street_address_1",
-            "description": "<p>Store Physical Address 1</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "street_address_2",
-            "description": "<p>Store Physical Address 2</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": true,
-            "field": "city_id",
-            "description": "<p>Store City</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": true,
-            "field": "country_id",
-            "description": "<p>Country for the store (will be detected automatically from the</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": true,
-            "field": "postal_code",
-            "description": "<p>Store Postal code</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Request-Example",
-          "content": "{\n     \"name\": \"Almaya store\",\n     \"street_address_1\": \"G floor, Lake point tower, Cluster N, JLT\",\n     \"street_address_2\": \"G floor, Lake point tower, Cluster Z, JLT\",\n     \"city_id\": 1,\n     \"country_id\": 1,\n     \"postal_code\": \"12345\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "app/Modules/Store/Controllers/StoreController.php",
-    "groupTitle": "Store",
-    "name": "PostStore"
-  },
-  {
-    "type": "post",
-    "url": "/store",
     "title": "3. Create Store",
     "group": "Store",
     "parameter": {
@@ -1496,6 +1431,71 @@
     "filename": "app/Modules/Store/Controllers/StoreController.php",
     "groupTitle": "Store",
     "name": "PostStore"
+  },
+  {
+    "type": "PUT",
+    "url": "/store",
+    "title": "4. Update Store",
+    "group": "Store",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "name",
+            "description": "<p>Store name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "street_address_1",
+            "description": "<p>Store Physical Address 1</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "street_address_2",
+            "description": "<p>Store Physical Address 2</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": true,
+            "field": "city_id",
+            "description": "<p>Store City</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": true,
+            "field": "country_id",
+            "description": "<p>Country for the store (will be detected automatically from the</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": true,
+            "field": "postal_code",
+            "description": "<p>Store Postal code</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example",
+          "content": "{\n     \"name\": \"Almaya store\",\n     \"street_address_1\": \"G floor, Lake point tower, Cluster N, JLT\",\n     \"street_address_2\": \"G floor, Lake point tower, Cluster Z, JLT\",\n     \"city_id\": 1,\n     \"country_id\": 1,\n     \"postal_code\": \"12345\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Modules/Store/Controllers/StoreController.php",
+    "groupTitle": "Store",
+    "name": "PutStore"
   },
   {
     "type": "DELETE",
